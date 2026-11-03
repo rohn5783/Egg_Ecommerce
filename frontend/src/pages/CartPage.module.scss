@@ -1,0 +1,324 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.pageWrapper {
+  background-color: $color-cream-base;
+  min-height: 100vh;
+}
+
+.mainContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 36px 28px 80px;
+}
+
+.pageHeader {
+  margin-bottom: 32px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: $color-brown-light;
+  margin-bottom: 12px;
+
+  &:hover {
+    color: $color-brown-dark;
+  }
+}
+
+.title {
+  @include editorial-heading-lg;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 80px 20px;
+  background-color: $color-cream-light;
+  border-radius: $radius-2xl;
+  border: 1px solid $color-cream-border;
+  max-width: 600px;
+  margin: 0 auto;
+
+  .emptyEgg {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-family: $font-editorial;
+    font-size: 1.8rem;
+    color: $color-brown-dark;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: $color-brown-light;
+    margin-bottom: 28px;
+  }
+}
+
+.cartLayout {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 40px;
+}
+
+.itemsCol {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 24px 32px;
+  box-shadow: $shadow-sm;
+}
+
+.itemsHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding-bottom: 16px;
+  border-bottom: 1px solid $color-cream-border;
+  font-size: 0.8rem;
+  font-weight: $weight-bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $color-brown-light;
+}
+
+.cartRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid $color-cream-border;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.productCell {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.itemImg {
+  width: 64px;
+  height: 64px;
+  border-radius: $radius-md;
+  object-fit: cover;
+}
+
+.itemName {
+  font-family: $font-editorial;
+  font-size: 1.05rem;
+  font-weight: $weight-bold;
+  color: $color-brown-dark;
+  line-height: 1.25;
+}
+
+.itemPrice {
+  font-size: 0.825rem;
+  color: $color-brown-light;
+}
+
+.customBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  background-color: $color-yellow-light;
+  color: $color-brown-dark;
+  font-weight: $weight-bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.qtyBox {
+  display: inline-flex;
+  align-items: center;
+  background-color: $color-cream-base;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-full;
+  padding: 2px 6px;
+
+  button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: $color-yellow-light;
+    }
+  }
+
+  span {
+    padding: 0 10px;
+    font-weight: $weight-bold;
+    font-size: 0.9rem;
+  }
+}
+
+.totalCell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.subtotalVal {
+  font-size: 1.1rem;
+  font-weight: $weight-extrabold;
+  color: $color-brown-dark;
+}
+
+.deleteBtn {
+  color: $color-brown-light;
+  padding: 6px;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $color-danger;
+  }
+}
+
+.summaryCol {
+  position: sticky;
+  top: 96px;
+  height: fit-content;
+}
+
+.summaryCard {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 32px;
+  box-shadow: $shadow-sm;
+}
+
+.summaryTitle {
+  font-family: $font-editorial;
+  font-size: 1.4rem;
+  color: $color-brown-dark;
+  margin-bottom: 24px;
+}
+
+.couponWrapper {
+  margin-bottom: 24px;
+}
+
+.couponForm {
+  display: flex;
+  gap: 8px;
+}
+
+.couponInput {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: $radius-md;
+  border: 1px solid $color-cream-border;
+  background-color: $color-cream-base;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.couponBtn {
+  padding: 10px 18px;
+  border-radius: $radius-md;
+  background-color: $color-brown-dark;
+  color: $color-cream-light;
+  font-weight: $weight-bold;
+  font-size: 0.8rem;
+}
+
+.appliedTag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $color-yellow-light;
+  border: 1px solid rgba(255, 184, 0, 0.4);
+  padding: 10px 14px;
+  border-radius: $radius-md;
+  font-size: 0.85rem;
+}
+
+.removeCoupon {
+  color: $color-danger;
+  font-size: 0.75rem;
+  font-weight: $weight-bold;
+}
+
+.errMsg {
+  color: $color-danger;
+  font-size: 0.75rem;
+  margin-top: 6px;
+}
+
+.successMsg {
+  color: $color-success;
+  font-size: 0.75rem;
+  margin-top: 6px;
+}
+
+.priceBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 0;
+  border-top: 1px solid $color-cream-border;
+  border-bottom: 1px solid $color-cream-border;
+  margin-bottom: 24px;
+}
+
+.priceRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: $color-brown-muted;
+
+  strong {
+    color: $color-brown-dark;
+  }
+}
+
+.discountText {
+  color: $color-success;
+  strong {
+    color: $color-success;
+  }
+}
+
+.freeBadge {
+  color: $color-success;
+  font-weight: $weight-bold;
+}
+
+.totalRow {
+  font-size: 1.25rem;
+  font-weight: $weight-bold;
+  color: $color-brown-dark;
+  padding-top: 8px;
+}
+
+.finalTotalVal {
+  color: $color-yellow-deep;
+  font-size: 1.45rem;
+}
+
+.checkoutBtn {
+  width: 100%;
+  @include btn-primary;
+  font-size: 1rem;
+  padding: 16px;
+}
+
+@include tablet {
+  .cartLayout {
+    grid-template-columns: 1fr;
+  }
+}
+

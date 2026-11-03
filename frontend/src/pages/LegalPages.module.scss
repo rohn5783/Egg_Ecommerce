@@ -1,0 +1,65 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.legalWrapper {
+  background-color: $color-cream-base;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 80px 28px 100px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.title {
+  @include editorial-heading-xl;
+  margin: 14px 0 10px;
+}
+
+.updatedDate {
+  font-size: 0.9rem;
+  color: $color-brown-muted;
+}
+
+.content {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 48px;
+  box-shadow: $shadow-sm;
+
+  section {
+    margin-bottom: 32px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: $weight-bold;
+      color: $color-brown-dark;
+      margin-bottom: 12px;
+      font-family: $font-editorial;
+    }
+
+    p {
+      font-size: 1rem;
+      color: $color-brown-light;
+      line-height: 1.7;
+    }
+  }
+}
+
+@include mobile {
+  .content {
+    padding: 28px 20px;
+  }
+}
+

@@ -1,0 +1,464 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.pageWrapper {
+  background-color: $color-cream-base;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContainer {
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 28px 80px;
+  flex: 1;
+}
+
+.shopHeader {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.pageTitle {
+  @include editorial-heading-lg;
+  margin-bottom: 12px;
+}
+
+.pageSubtitle {
+  font-size: 1.05rem;
+  color: $color-brown-muted;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.contentLayout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 36px;
+}
+
+.sidebar {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 24px;
+  height: fit-content;
+  position: sticky;
+  top: 96px;
+  box-shadow: $shadow-sm;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid $color-cream-border;
+}
+
+.filterTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $font-editorial;
+  font-size: 1.15rem;
+  font-weight: $weight-bold;
+  color: $color-brown-dark;
+}
+
+.resetBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: $color-brown-light;
+  font-weight: $weight-semibold;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $color-brown-dark;
+  }
+}
+
+.searchBox {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: $color-brown-light;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 14px 10px 40px;
+  background-color: $color-cream-base;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-md;
+  font-size: 0.875rem;
+
+  &:focus {
+    border-color: $color-yellow-base;
+  }
+}
+
+.filterGroup {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $color-cream-border;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.groupHeading {
+  font-size: 0.75rem;
+  font-weight: $weight-extrabold;
+  letter-spacing: 0.08em;
+  color: $color-brown-light;
+  margin-bottom: 12px;
+}
+
+.filterList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.categoryOption {
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: $radius-md;
+  font-size: 0.875rem;
+  color: $color-brown-base;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-cream-dark;
+    color: $color-brown-dark;
+  }
+
+  &.optionActive {
+    background-color: $color-brown-dark;
+    color: $color-cream-light;
+    font-weight: $weight-bold;
+  }
+}
+
+.priceHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.priceVal {
+  font-size: 0.85rem;
+  font-weight: $weight-bold;
+  color: $color-yellow-deep;
+}
+
+.rangeSlider {
+  width: 100%;
+  accent-color: $color-yellow-base;
+  cursor: pointer;
+}
+
+.resultsArea {
+  display: flex;
+  flex-direction: column;
+}
+
+.resultsTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  padding: 12px 20px;
+  border-radius: $radius-lg;
+}
+
+.resultsCount {
+  font-size: 0.9rem;
+  color: $color-brown-muted;
+
+  strong {
+    color: $color-brown-dark;
+  }
+}
+
+.sortWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: $color-brown-light;
+}
+
+.sortSelect {
+  background: transparent;
+  border: 1px solid $color-cream-border;
+  padding: 6px 12px;
+  border-radius: $radius-md;
+  font-size: 0.85rem;
+  font-weight: $weight-semibold;
+  color: $color-brown-dark;
+  cursor: pointer;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.productCard {
+  @include product-card-base;
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+  background-color: #FAF4E8;
+}
+
+.cardTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2;
+  margin-bottom: 8px;
+}
+
+.wishlistBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1px solid $color-cream-border;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: #FFFFFF;
+  }
+
+  &.wishlistActive {
+    background-color: #FFEAE6;
+  }
+}
+
+.ratingBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(255, 255, 255, 0.85);
+  padding: 4px 8px;
+  border-radius: $radius-full;
+  font-size: 0.75rem;
+  font-weight: $weight-bold;
+  color: $color-brown-dark;
+  border: 1px solid $color-cream-border;
+}
+
+.packCartonBtn {
+  position: absolute;
+  top: 64px;
+  left: 20px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1px solid $color-cream-border;
+  color: $color-brown-muted;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-yellow-light;
+    color: $color-yellow-deep;
+  }
+}
+
+.imageWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  margin-bottom: 12px;
+}
+
+.productImg {
+  max-height: 180px;
+  width: auto;
+  object-fit: contain;
+  transition: transform $transition-fast;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.cardDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: auto;
+  padding-right: 56px;
+}
+
+.quantityBadge {
+  font-size: 0.7rem;
+  font-weight: $weight-extrabold;
+  letter-spacing: 0.08em;
+  color: $color-brown-light;
+}
+
+.titleLink {
+  font-family: $font-editorial;
+  font-size: 1.15rem;
+  font-weight: $weight-bold;
+  color: $color-brown-dark;
+  line-height: 1.25;
+
+  &:hover {
+    color: $color-yellow-deep;
+  }
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.currentPrice {
+  font-size: 1.15rem;
+  font-weight: $weight-extrabold;
+  color: $color-brown-dark;
+}
+
+.originalPrice {
+  font-size: 0.85rem;
+  color: $color-brown-light;
+  text-decoration: line-through;
+}
+
+.cornerActionBtn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 62px;
+  height: 62px;
+  background-color: $color-yellow-base;
+  color: $color-brown-dark;
+  border-top-left-radius: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding-right: 16px;
+  padding-bottom: 16px;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-yellow-hover;
+    width: 68px;
+    height: 68px;
+  }
+
+  &.cornerAdded {
+    background-color: $color-success;
+    color: #FFFFFF;
+  }
+}
+
+.noResults {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: $color-cream-light;
+  border-radius: $radius-2xl;
+  border: 1px solid $color-cream-border;
+
+  .noResultsEgg {
+    font-size: 3rem;
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    font-family: $font-editorial;
+    font-size: 1.4rem;
+    color: $color-brown-dark;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: $color-brown-light;
+    margin-bottom: 24px;
+  }
+}
+
+.loadingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.skeletonCard {
+  height: 420px;
+  background-color: $color-cream-dark;
+  border-radius: $radius-2xl;
+  animation: pulseSkeleton 1.5s infinite;
+}
+
+@keyframes pulseSkeleton {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@include tablet {
+  .contentLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .cardsGrid,
+  .loadingGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@include mobile {
+  .cardsGrid,
+  .loadingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .mainContainer {
+    padding: 24px 16px 60px;
+  }
+}
+

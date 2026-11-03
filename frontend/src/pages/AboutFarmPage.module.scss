@@ -1,0 +1,204 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.pageWrapper {
+  background-color: $color-cream-base;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.heroBanner {
+  padding: 90px 0 70px;
+  background: radial-gradient(circle at 75% 20%, #FFF5DC 0%, $color-cream-base 60%);
+  text-align: center;
+}
+
+.heroTitle {
+  @include editorial-heading-xl;
+  margin: 16px 0 20px;
+}
+
+.heroSubtitle {
+  font-size: 1.15rem;
+  color: $color-brown-muted;
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.philosophySection {
+  padding: 90px 0;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 56px;
+}
+
+.subLabel {
+  font-size: 0.8rem;
+  font-weight: $weight-bold;
+  text-transform: uppercase;
+  color: $color-yellow-deep;
+  letter-spacing: 0.1em;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.heading {
+  @include editorial-heading-lg;
+  margin-bottom: 20px;
+}
+
+.textCol p {
+  font-size: 1.05rem;
+  color: $color-brown-light;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.checklist {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  font-weight: $weight-semibold;
+  color: $color-brown-dark;
+
+  .checkIcon {
+    color: $color-accent-green;
+  }
+}
+
+.imageCol {
+  position: relative;
+}
+
+.farmImg {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  border-radius: $radius-2xl;
+  box-shadow: $shadow-lg;
+  border: 2px solid $color-cream-border;
+}
+
+.yolkScience {
+  padding: 90px 0;
+  background-color: $color-cream-light;
+  border-top: 1px solid $color-cream-border;
+  border-bottom: 1px solid $color-cream-border;
+}
+
+.headerCentered {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 52px;
+
+  p {
+    font-size: 1.05rem;
+    color: $color-brown-muted;
+    line-height: 1.6;
+    margin-top: 14px;
+  }
+}
+
+.metricsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.metricCard {
+  background-color: $color-cream-base;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-xl;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: $shadow-sm;
+
+  strong {
+    font-family: $font-editorial;
+    font-size: 2.4rem;
+    color: $color-yellow-deep;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  span {
+    font-size: 1rem;
+    font-weight: $weight-bold;
+    color: $color-brown-dark;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 0.85rem;
+    color: $color-brown-light;
+    line-height: 1.5;
+  }
+}
+
+.ctaSection {
+  padding: 90px 0;
+  background-color: $color-chocolate-brown;
+  color: $color-cream-light;
+  text-align: center;
+
+  h2 {
+    @include editorial-heading-lg;
+    color: $color-primary-cream;
+    margin-bottom: 14px;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #D6C7B8;
+    margin-bottom: 32px;
+  }
+}
+
+.shopBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: $color-golden-yellow;
+  color: $color-chocolate-brown;
+  font-weight: $weight-bold;
+  font-size: 1rem;
+  padding: 14px 32px;
+  border-radius: $radius-full;
+  text-decoration: none;
+  transition: all $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(244, 185, 0, 0.4);
+  }
+}
+
+@include tablet {
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
+
+  .metricsRow {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,710 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.pageWrapper {
+  background-color: $color-cream-base;
+  min-height: 100vh;
+}
+
+.mainContainer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 28px 80px;
+}
+
+.successBanner {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.checkIconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #E8F5E9;
+  margin-bottom: 20px;
+}
+
+.checkIcon {
+  color: $color-success;
+}
+
+.pageTitle {
+  @include editorial-heading-lg;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: $color-brown-muted;
+  margin-bottom: 18px;
+}
+
+.orderNumberBadge {
+  display: inline-block;
+  background-color: $color-yellow-light;
+  color: $color-brown-dark;
+  font-weight: $weight-extrabold;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  padding: 8px 18px;
+  border-radius: $radius-full;
+  border: 1px solid rgba(255, 184, 0, 0.4);
+}
+
+.timelineCard {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 32px;
+  margin-bottom: 36px;
+  box-shadow: $shadow-sm;
+}
+
+.timelineTitle {
+  font-family: $font-editorial;
+  font-size: 1.25rem;
+  color: $color-brown-dark;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.timelineTrack {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background-color: $color-cream-dark;
+    z-index: 1;
+  }
+}
+
+.timelineStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.stepDot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: $color-cream-base;
+  border: 2px solid $color-cream-border;
+  color: $color-brown-light;
+  font-weight: $weight-bold;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepLabel {
+  font-size: 0.75rem;
+  font-weight: $weight-bold;
+  color: $color-brown-light;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stepCompleted {
+  .stepDot {
+    background-color: $color-success;
+    border-color: $color-success;
+    color: #FFFFFF;
+  }
+
+  .stepLabel {
+    color: $color-brown-dark;
+  }
+}
+
+.stepCurrent {
+  .stepDot {
+    background-color: $color-yellow-base;
+    border-color: $color-yellow-deep;
+    color: $color-brown-dark;
+    box-shadow: 0 0 0 4px rgba(255, 184, 0, 0.25);
+  }
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 32px;
+}
+
+.itemsCard {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 32px;
+  box-shadow: $shadow-sm;
+}
+
+.cardHeader {
+  font-family: $font-editorial;
+  font-size: 1.25rem;
+  color: $color-brown-dark;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid $color-cream-border;
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.itemImg {
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-md;
+  object-fit: cover;
+}
+
+.itemInfo {
+  flex: 1;
+
+  h4 {
+    font-size: 0.925rem;
+    color: $color-brown-dark;
+    line-height: 1.25;
+  }
+
+  span {
+    font-size: 0.8rem;
+    color: $color-brown-light;
+  }
+}
+
+.itemSubtotal {
+  font-size: 1rem;
+  color: $color-brown-dark;
+}
+
+.totalsTable {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px dashed $color-cream-border;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: $color-brown-light;
+}
+
+.discountText {
+  color: $color-success;
+}
+
+.finalTotalRow {
+  font-size: 1.25rem;
+  font-weight: $weight-bold;
+  color: $color-yellow-deep;
+  padding-top: 8px;
+}
+
+.infoCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sideCard {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 24px;
+  box-shadow: $shadow-sm;
+}
+
+.cardTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+
+  h4 {
+    font-family: $font-editorial;
+    font-size: 1.15rem;
+    color: $color-brown-dark;
+  }
+}
+
+.expectedTime {
+  font-size: 0.95rem;
+  font-weight: $weight-bold;
+  color: $color-brown-dark;
+  margin-bottom: 4px;
+}
+
+.timingNote {
+  font-size: 0.8rem;
+  color: $color-brown-light;
+}
+
+.addressBox {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: $color-brown-muted;
+
+  strong {
+    color: $color-brown-dark;
+    display: block;
+    margin-bottom: 2px;
+  }
+}
+
+.phoneText {
+  margin-top: 6px;
+  font-size: 0.825rem;
+  color: $color-brown-light;
+}
+
+.instructText {
+  margin-top: 6px;
+  background-color: $color-cream-base;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.775rem;
+}
+
+.actionsRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slipButtonsRow {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.printSlipBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 18px;
+  border-radius: $radius-full;
+  border: 1.5px solid $color-brown-dark;
+  background-color: $color-brown-dark;
+  color: #FFFFFF;
+  font-weight: $weight-bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-brown-dark-hover;
+    transform: translateY(-1px);
+  }
+}
+
+.downloadSlipBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 18px;
+  border-radius: $radius-full;
+  border: 1.5px solid $color-yellow-deep;
+  background-color: $color-yellow-light;
+  color: $color-brown-dark;
+  font-weight: $weight-bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-yellow-base;
+    transform: translateY(-1px);
+  }
+}
+
+.paymentSlipSection {
+  margin-top: 40px;
+}
+
+.paymentSlipCard {
+  background-color: #FFFFFF;
+  border: 1.5px solid #EBE4D8;
+  border-radius: $radius-2xl;
+  padding: 36px 40px;
+  box-shadow: 0 4px 20px rgba(36, 18, 13, 0.06);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #F5D85E, #E8912B, #24120D);
+  }
+}
+
+.slipHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #24120D;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.slipBrand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  h2 {
+    font-family: $font-editorial;
+    font-size: 1.6rem;
+    color: #24120D;
+    margin: 0;
+  }
+
+  span {
+    font-size: 0.825rem;
+    color: #6E6862;
+  }
+
+  .taxReg {
+    font-size: 0.75rem;
+    color: #8C827A;
+    font-family: monospace;
+    margin-top: 2px;
+  }
+}
+
+.slipInvoiceMeta {
+  text-align: right;
+
+  .slipTitleBadge {
+    display: inline-block;
+    background-color: #24120D;
+    color: #FFFFFF;
+    font-size: 0.8rem;
+    font-weight: $weight-bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .slipInvNum {
+    font-size: 1rem;
+    font-weight: $weight-extrabold;
+    color: #24120D;
+  }
+
+  .slipDate {
+    font-size: 0.8rem;
+    color: #6E6862;
+    margin-top: 2px;
+  }
+
+  .slipStatusPaid {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    font-weight: $weight-bold;
+    font-size: 0.8rem;
+    padding: 3px 10px;
+    border-radius: $radius-full;
+    margin-top: 6px;
+    border: 1px solid #C8E6C9;
+  }
+}
+
+.slipMetaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.slipMetaBox {
+  background-color: #FAF7F2;
+  border: 1px solid #EBE4D8;
+  border-radius: $radius-lg;
+  padding: 16px 20px;
+
+  h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8C827A;
+    font-weight: $weight-bold;
+    margin-bottom: 8px;
+  }
+
+  strong {
+    display: block;
+    font-size: 0.95rem;
+    color: #24120D;
+    margin-bottom: 4px;
+  }
+
+  p {
+    font-size: 0.85rem;
+    color: #554D47;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .slipPaymentId {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #24120D;
+    background: #FFFFFF;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #DDD;
+    display: inline-block;
+    margin-top: 4px;
+  }
+}
+
+.slipTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+
+  th {
+    background-color: #24120D;
+    color: #FFFFFF;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 10px 14px;
+    text-align: left;
+
+    &:last-child {
+      text-align: right;
+    }
+  }
+
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #EBE4D8;
+    font-size: 0.875rem;
+    color: #382D26;
+
+    &:last-child {
+      text-align: right;
+      font-weight: $weight-semibold;
+      color: #24120D;
+    }
+  }
+
+  .hsnCode {
+    font-family: monospace;
+    font-size: 0.775rem;
+    color: #8C827A;
+  }
+}
+
+.slipFooterGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  align-items: flex-start;
+  padding-top: 12px;
+}
+
+.slipSealBox {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #FAF7F2;
+  border: 1px dashed #D6CBBC;
+  border-radius: $radius-lg;
+  padding: 16px 20px;
+
+  .sealBadge {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid #2E7D32;
+    color: #2E7D32;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    background-color: #E8F5E9;
+    flex-shrink: 0;
+  }
+
+  .sealText {
+    strong {
+      display: block;
+      font-size: 0.875rem;
+      color: #24120D;
+      margin-bottom: 2px;
+    }
+    p {
+      font-size: 0.75rem;
+      color: #6E6862;
+      line-height: 1.4;
+      margin: 0;
+    }
+  }
+}
+
+.slipCalculationBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .slipCalcRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: #554D47;
+  }
+
+  .slipCalcGrand {
+    border-top: 2px solid #24120D;
+    padding-top: 8px;
+    margin-top: 4px;
+    font-size: 1.15rem;
+    font-weight: $weight-extrabold;
+    color: #24120D;
+  }
+}
+
+.slipDisclaimer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px dashed #EBE4D8;
+  font-size: 0.75rem;
+  color: #8C827A;
+}
+
+.printBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: $radius-full;
+  border: 1.5px solid $color-cream-border;
+  background-color: $color-cream-light;
+  color: $color-brown-dark;
+  font-weight: $weight-semibold;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-cream-dark;
+  }
+}
+
+.loadingPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.loader {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  font-size: 1.2rem;
+  color: $color-brown-light;
+}
+
+@include tablet {
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .slipMetaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .slipFooterGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .timelineTrack {
+    overflow-x: auto;
+    padding-bottom: 12px;
+  }
+}
+
+/* Print Optimization Media Query */
+@media print {
+  body {
+    background: #FFFFFF !important;
+  }
+
+  header,
+  footer,
+  .successBanner,
+  .timelineCard,
+  .detailsGrid,
+  .slipButtonsRow,
+  .orderNumberBadge {
+    display: none !important;
+  }
+
+  .paymentSlipSection {
+    margin-top: 0 !important;
+  }
+
+  .paymentSlipCard {
+    border: 1px solid #000000 !important;
+    box-shadow: none !important;
+    padding: 20px !important;
+  }
+
+  .mainContainer {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+}
+

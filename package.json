@@ -1,0 +1,33 @@
+{
+  "name": "goodeggs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GoodEggs — Premium Farm-to-Consumer E-Commerce Platform",
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "blender:build": "\"C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe\" -b -P blender/scripts/create_assets.py",
+    "test:backend": "npm --prefix backend test",
+    "test:frontend": "npm --prefix frontend test",
+    "test": "npm run test:backend && npm run test:frontend",
+    "seed": "npm --prefix backend run seed"
+  },
+  "keywords": [
+    "ecommerce",
+    "farm-to-consumer",
+    "organic-eggs",
+    "react",
+    "express",
+    "threejs",
+    "lenis",
+    "gsap"
+  ],
+  "author": "GoodEggs Engineering",
+  "license": "ISC",
+  "devDependencies": {
+    "puppeteer-core": "^25.16.0"
+  }
+}

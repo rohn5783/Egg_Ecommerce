@@ -1,0 +1,94 @@
+// GoodEggs Brand Design Tokens — Farm to Table Warm Identity
+
+// Exact Prompt Color Palette (From Reference Video)
+$color-primary-cream: #F8F4E8;
+$color-soft-yellow: #F5D85E;
+$color-golden-yellow: #EFBF35;
+$color-dark-brown: #32190F;
+$color-chocolate-brown: #24120D;
+$color-egg-white: #FFFFFF;
+$color-egg-brown: #A66B3F;
+$color-text-dark: #211A13;
+
+// Mapped Palette
+$color-cream-light: #FFFDF9;
+$color-cream-base: #F8F4E8; // Primary cream
+$color-cream-dark: #F0E8D4;
+$color-cream-hover: #ECE2CC;
+$color-cream-border: #E5DAC0;
+
+$color-yellow-light: #FDF4D4;
+$color-yellow-base: #EFBF35; // Golden yellow
+$color-yellow-soft: #F5D85E; // Soft yellow
+$color-yellow-hover: #D9A400;
+$color-yellow-deep: #D97706;
+
+$color-brown-light: #A66B3F; // Egg brown
+$color-brown-muted: #6B4028;
+$color-brown-base: #32190F;  // Dark brown
+$color-brown-dark: #24120D;  // Chocolate brown / text dark
+$color-brown-dark-hover: #381D13; // Soft warm hover for dark brown
+
+$color-accent-green: #3B7A57; // Pasture green
+$color-accent-green-light: #EBF5EE;
+
+$color-white: #FFFFFF;
+$color-success: #2E7D32;
+$color-danger: #C62828;
+$color-warning: #EF6C00;
+
+// Typography
+$font-display: 'Bricolage Grotesque', 'Fraunces', serif, Georgia;
+$font-editorial: 'Bricolage Grotesque', 'Fraunces', serif, Georgia;
+$font-sans: 'DM Sans', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-script: 'Caveat', cursive, -apple-system, sans-serif;
+$font-hand: 'Caveat', cursive, -apple-system, sans-serif;
+
+// Font Weights
+$weight-light: 300;
+$weight-regular: 400;
+$weight-normal: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+$weight-bold: 700;
+$weight-extrabold: 800;
+
+// Spacing System
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 32px;
+$space-2xl: 48px;
+$space-3xl: 64px;
+$space-4xl: 96px;
+
+// Border Radii (Soft, organic egg-inspired curves)
+$radius-sm: 8px;
+$radius-md: 14px;
+$radius-lg: 20px;
+$radius-xl: 28px;
+$radius-2xl: 36px;
+$radius-full: 9999px;
+
+// Shadows (Subtle, warm natural shadows)
+$shadow-sm: 0 2px 8px rgba(35, 18, 11, 0.04);
+$shadow-md: 0 8px 24px rgba(35, 18, 11, 0.06);
+$shadow-lg: 0 16px 40px rgba(35, 18, 11, 0.08);
+$shadow-float: 0 24px 48px -12px rgba(61, 35, 23, 0.12);
+
+// Transitions
+$transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-base: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+// Z-index Hierarchy
+$z-negative: -1;
+$z-base: 1;
+$z-sticky: 10;
+$z-nav: 100;
+$z-carton-builder: 500;
+$z-drawer: 900;
+$z-modal: 1000;
+$z-toast: 1100;

@@ -1,0 +1,110 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.footer {
+  background-color: #F8F4E8;
+  padding: 60px 0 36px;
+  color: #24120D;
+  border-top: 1px solid rgba(36, 18, 13, 0.06);
+}
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.brandCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoText {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: #24120D;
+}
+
+.tagline {
+  font-family: 'Caveat', cursive, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #8C7765;
+  margin: 6px 0 0;
+}
+
+.linksRow {
+  display: flex;
+  gap: 64px;
+}
+
+.linkCol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    color: #6B5B4E;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #24120D;
+    }
+  }
+}
+
+.colHeader {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #24120D;
+  margin: 0 0 4px;
+}
+
+.subfooter {
+  max-width: 1180px;
+  margin: 40px auto 0;
+  padding: 20px 28px 0;
+  border-top: 1px solid rgba(36, 18, 13, 0.06);
+  text-align: center;
+
+  p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    color: #9C8C7E;
+    margin: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .linksRow {
+    gap: 36px;
+  }
+}

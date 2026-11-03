@@ -1,0 +1,319 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: #F8F4E8;
+  padding: 16px 0;
+  transition: all 0.25s ease;
+
+  &.scrolled {
+    background-color: rgba(248, 244, 232, 0.95);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(36, 18, 13, 0.05);
+    padding: 12px 0;
+  }
+}
+
+.navbarContainer {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: rotate(6deg) scale(1.05);
+  }
+}
+
+.logoText {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+  color: #24120D;
+}
+
+.navPill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(36, 18, 13, 0.05);
+  border: 1px solid rgba(36, 18, 13, 0.08);
+  border-radius: 9999px;
+  padding: 4px 6px;
+}
+
+.navLink {
+  padding: 6px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  color: #24120D;
+  text-decoration: none;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #000000;
+  }
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.signInBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(36, 18, 13, 0.05);
+  border: 1px solid rgba(36, 18, 13, 0.12);
+  border-radius: 9999px;
+  padding: 8px 16px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  color: #24120D;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(36, 18, 13, 0.1);
+    transform: translateY(-1px);
+    color: #000000;
+  }
+}
+
+.adminNavBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #F5D85E;
+  color: #24120D;
+  border: 1px solid rgba(36, 18, 13, 0.15);
+  border-radius: 9999px;
+  padding: 7px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #EFBF35;
+    transform: translateY(-1px);
+  }
+}
+
+.userDropdownWrapper {
+  position: relative;
+}
+
+.userMenuBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1px solid rgba(36, 18, 13, 0.15);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  color: #24120D;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(36, 18, 13, 0.06);
+
+  &:hover {
+    background: #FAF7F2;
+    border-color: #24120D;
+  }
+
+  .userAvatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #F5D85E;
+    color: #24120D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  .userNameText {
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.userDropdownMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 230px;
+  background: #FFFFFF;
+  border: 1px solid #EBE4D8;
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 12px 32px rgba(36, 18, 13, 0.14);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: dropdownPop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownPop {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.dropdownHeader {
+  padding: 8px 12px;
+  border-bottom: 1px solid #F0EAE1;
+  margin-bottom: 4px;
+
+  strong {
+    display: block;
+    font-size: 0.875rem;
+    color: #24120D;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  span {
+    display: block;
+    font-size: 0.75rem;
+    color: #8C827A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .roleBadge {
+    display: inline-block;
+    background: #FAF7F2;
+    border: 1px solid #EBE4D8;
+    color: #24120D;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #24120D;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: #FAF7F2;
+    color: #E8912B;
+  }
+}
+
+.logoutBtn {
+  color: #D32F2F;
+  border-top: 1px solid #F0EAE1;
+  margin-top: 4px;
+  padding-top: 8px;
+
+  &:hover {
+    background: #FFEBEE;
+    color: #C62828;
+  }
+}
+
+.orderEggsBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #24120D;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  padding: 9px 22px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(36, 18, 13, 0.15);
+
+  &:hover {
+    background-color: #381E15;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(36, 18, 13, 0.22);
+  }
+}
+
+.cartCountBadge {
+  display: inline-flex;
+  align-items: center;
+  background: #EFBF35;
+  color: #24120D;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  margin-left: 4px;
+}
+
+@media (max-width: 768px) {
+  .navPill {
+    display: none;
+  }
+}

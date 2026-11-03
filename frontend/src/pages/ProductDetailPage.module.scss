@@ -1,0 +1,578 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.pageWrapper {
+  background-color: $color-cream-base;
+  min-height: 100vh;
+}
+
+.mainContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 28px 80px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: $weight-semibold;
+  color: $color-brown-light;
+  margin-bottom: 28px;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $color-brown-dark;
+  }
+}
+
+.productHero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  margin-bottom: 80px;
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 48px;
+  box-shadow: $shadow-sm;
+}
+
+.galleryCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mainImgWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FAF4E8;
+  border-radius: $radius-xl;
+  height: 420px;
+  padding: 24px;
+  border: 1px solid $color-cream-border;
+}
+
+.mainImg {
+  max-height: 360px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 24px rgba(61, 35, 23, 0.15));
+}
+
+.thumbRow {
+  display: flex;
+  gap: 12px;
+}
+
+.thumbBtn {
+  width: 72px;
+  height: 72px;
+  border-radius: $radius-md;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background-color: #FAF4E8;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &.thumbActive {
+    border-color: $color-yellow-base;
+  }
+}
+
+.infoCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.topBadgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.ratingBox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: $weight-bold;
+  color: $color-brown-dark;
+}
+
+.revCount {
+  color: $color-brown-light;
+  font-weight: $weight-normal;
+}
+
+.productTitle {
+  @include editorial-heading-lg;
+  margin-bottom: 12px;
+}
+
+.shortDesc {
+  font-size: 1.05rem;
+  color: $color-brown-muted;
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+.priceBox {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.price {
+  font-size: 2.2rem;
+  font-weight: $weight-extrabold;
+  color: $color-brown-dark;
+}
+
+.original {
+  font-size: 1.2rem;
+  color: $color-brown-light;
+  text-decoration: line-through;
+}
+
+.savings {
+  background-color: #E8F5E9;
+  color: $color-success;
+  font-weight: $weight-bold;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: $radius-full;
+}
+
+.specsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  background-color: $color-cream-base;
+  padding: 20px;
+  border-radius: $radius-lg;
+  border: 1px solid $color-cream-border;
+  margin-bottom: 32px;
+}
+
+.specBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.specLabel {
+  font-size: 0.75rem;
+  color: $color-brown-light;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.specValue {
+  font-size: 1rem;
+  color: $color-brown-dark;
+}
+
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.qtyControl {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid $color-cream-border;
+  border-radius: $radius-full;
+  background-color: #FAF4E8;
+  padding: 4px;
+
+  button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: $color-brown-dark;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: $color-yellow-light;
+    }
+  }
+
+  span {
+    padding: 0 16px;
+    font-weight: $weight-bold;
+    font-size: 1.05rem;
+  }
+}
+
+.addCartBtn {
+  flex: 1;
+  @include btn-primary;
+  font-size: 1rem;
+  padding: 16px 28px;
+}
+
+.packBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: $color-cream-dark;
+  color: $color-brown-dark;
+  border: 1px solid $color-cream-border;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-yellow-light;
+    border-color: $color-yellow-base;
+    transform: scale(1.05);
+  }
+}
+
+.trustStrip {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 20px;
+  border-top: 1px solid $color-cream-border;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: $color-brown-muted;
+}
+
+.nutritionSection {
+  margin-bottom: 80px;
+}
+
+.sectionHeader {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  @include editorial-heading-md;
+}
+
+.nutritionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.nutritionCard,
+.farmingCard {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 32px;
+  box-shadow: $shadow-sm;
+}
+
+.cardHeader {
+  font-family: $font-editorial;
+  font-size: 1.35rem;
+  color: $color-brown-dark;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid $color-cream-border;
+}
+
+.nutriRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed $color-cream-border;
+  font-size: 0.95rem;
+
+  span {
+    color: $color-brown-light;
+  }
+
+  strong {
+    color: $color-brown-dark;
+  }
+}
+
+.farmParagraph {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: $color-brown-muted;
+  margin-bottom: 24px;
+}
+
+.packagingBox {
+  background-color: $color-cream-base;
+  padding: 20px;
+  border-radius: $radius-lg;
+  border: 1px solid $color-cream-border;
+
+  strong {
+    display: block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $color-brown-dark;
+    margin-bottom: 4px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: $color-brown-muted;
+  }
+}
+
+.reviewsSection {
+  margin-bottom: 40px;
+}
+
+.reviewsLayout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 36px;
+  margin-top: 24px;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewItem {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-xl;
+  padding: 24px;
+}
+
+.revTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.revStars {
+  display: flex;
+  gap: 2px;
+}
+
+.verifiedTag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.725rem;
+  font-weight: $weight-bold;
+  color: $color-success;
+}
+
+.revTitle {
+  font-family: $font-editorial;
+  font-size: 1.1rem;
+  color: $color-brown-dark;
+  margin-bottom: 6px;
+}
+
+.revComment {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: $color-brown-muted;
+  margin-bottom: 12px;
+}
+
+.revAuthor {
+  font-size: 0.75rem;
+  color: $color-brown-light;
+}
+
+.noReviews {
+  color: $color-brown-light;
+  font-style: italic;
+  padding: 24px;
+  background-color: $color-cream-light;
+  border-radius: $radius-xl;
+}
+
+.reviewFormCard {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 28px;
+  height: fit-content;
+}
+
+.formTitle {
+  font-family: $font-editorial;
+  font-size: 1.3rem;
+  color: $color-brown-dark;
+  margin-bottom: 16px;
+}
+
+.loginPrompt {
+  font-size: 0.9rem;
+  color: $color-brown-muted;
+
+  a {
+    color: $color-yellow-deep;
+    font-weight: $weight-bold;
+    text-decoration: underline;
+  }
+}
+
+.reviewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ratingSelect {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: $weight-bold;
+    color: $color-brown-dark;
+  }
+
+  select {
+    padding: 6px 12px;
+    border-radius: $radius-md;
+    border: 1px solid $color-cream-border;
+    background-color: $color-cream-base;
+    font-size: 0.85rem;
+  }
+}
+
+.inputField,
+.textArea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: $radius-md;
+  border: 1px solid $color-cream-border;
+  background-color: $color-cream-base;
+  font-size: 0.875rem;
+
+  &:focus {
+    border-color: $color-yellow-base;
+  }
+}
+
+.reviewFeedback {
+  font-size: 0.85rem;
+  color: $color-success;
+  font-weight: $weight-semibold;
+  text-align: center;
+}
+
+@include tablet {
+  .productHero {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 32px;
+  }
+
+  .nutritionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .reviewsLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include mobile {
+  .productHero {
+    padding: 20px;
+  }
+
+  .actionRow {
+    flex-wrap: wrap;
+  }
+
+  .addCartBtn {
+    width: 100%;
+    order: 3;
+  }
+}
+
+
+.viewModeToggle {
+  display: flex;
+  gap: 8px;
+  background-color: $color-cream-dark;
+  padding: 4px;
+  border-radius: $radius-full;
+  width: fit-content;
+  margin-bottom: 16px;
+}
+
+.viewModeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: $radius-full;
+  font-size: 0.85rem;
+  font-weight: $weight-semibold;
+  color: $color-brown-light;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &.viewModeActive {
+    background-color: $color-cream-light;
+    color: $color-brown-dark;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.threeDInspectorWrapper {
+  width: 100%;
+  height: 480px;
+  background: radial-gradient(circle at 50% 50%, #FFFDF9 0%, $color-cream-dark 100%);
+  border-radius: $radius-2xl;
+  border: 1px solid $color-cream-border;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.threeDHint {
+  position: absolute;
+  bottom: 20px;
+  font-size: 0.8rem;
+  color: $color-brown-muted;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 6px 14px;
+  border-radius: $radius-full;
+  pointer-events: none;
+}

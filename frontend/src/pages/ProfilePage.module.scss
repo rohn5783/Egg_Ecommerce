@@ -1,0 +1,367 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.pageWrapper {
+  background-color: $color-cream-base;
+  min-height: 100vh;
+}
+
+.mainContainer {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 28px 80px;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+  padding: 32px;
+  margin-bottom: 32px;
+  box-shadow: $shadow-sm;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: $color-yellow-light;
+  border: 2px solid $color-yellow-base;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  flex: 1;
+}
+
+.userName {
+  font-family: $font-editorial;
+  font-size: 1.6rem;
+  color: $color-brown-dark;
+  line-height: 1.2;
+}
+
+.userEmail {
+  color: $color-brown-light;
+  font-size: 0.95rem;
+}
+
+.userPhone {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: $color-brown-muted;
+  margin-top: 4px;
+}
+
+.logoutBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: $radius-full;
+  border: 1.5px solid $color-cream-border;
+  background-color: $color-cream-base;
+  color: $color-brown-dark;
+  font-weight: $weight-bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: #FFEBEE;
+    color: $color-danger;
+    border-color: #FFCDD2;
+  }
+}
+
+.tabsRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.tabBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: $radius-full;
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  color: $color-brown-light;
+  font-weight: $weight-semibold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &.tabActive {
+    background-color: $color-brown-dark;
+    color: $color-cream-light;
+    border-color: $color-brown-dark;
+    font-weight: $weight-bold;
+  }
+}
+
+.emptyCard {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-2xl;
+
+  .emptyIcon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    font-family: $font-editorial;
+    font-size: 1.4rem;
+    color: $color-brown-dark;
+    margin-bottom: 6px;
+  }
+
+  p {
+    color: $color-brown-light;
+    margin-bottom: 20px;
+  }
+}
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.orderCard {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-xl;
+  padding: 24px;
+  box-shadow: $shadow-sm;
+}
+
+.orderTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid $color-cream-border;
+  margin-bottom: 16px;
+}
+
+.ordNum {
+  font-size: 1.05rem;
+  color: $color-brown-dark;
+  display: block;
+}
+
+.ordDate {
+  font-size: 0.8rem;
+  color: $color-brown-light;
+}
+
+.statusBadge {
+  font-size: 0.75rem;
+  font-weight: $weight-extrabold;
+  padding: 4px 10px;
+  border-radius: $radius-full;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &.pending {
+    background-color: #FFF3E0;
+    color: #E65100;
+  }
+  &.confirmed,
+  &.delivered {
+    background-color: #E8F5E9;
+    color: $color-success;
+  }
+  &.cancelled {
+    background-color: #FFEBEE;
+    color: $color-danger;
+  }
+}
+
+.orderItems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.itemThumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: $color-brown-base;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+}
+
+.orderBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px dashed $color-cream-border;
+}
+
+.totalLabel {
+  font-size: 0.85rem;
+  color: $color-brown-light;
+  margin-right: 6px;
+}
+
+.totalAmount {
+  font-size: 1.15rem;
+  color: $color-brown-dark;
+}
+
+.trackLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: $color-yellow-deep;
+  font-weight: $weight-bold;
+  font-size: 0.875rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.addressTop {
+  margin-bottom: 24px;
+}
+
+.addressForm {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-xl;
+  padding: 28px;
+  margin-bottom: 28px;
+
+  h3 {
+    font-family: $font-editorial;
+    font-size: 1.25rem;
+    color: $color-brown-dark;
+    margin-bottom: 16px;
+  }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+
+  input {
+    padding: 10px 14px;
+    border-radius: $radius-md;
+    border: 1px solid $color-cream-border;
+    background-color: $color-cream-base;
+    font-size: 0.875rem;
+
+    &:focus {
+      border-color: $color-yellow-base;
+    }
+  }
+}
+
+.addressesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.addressCard {
+  background-color: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-xl;
+  padding: 24px;
+  position: relative;
+}
+
+.addrHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  strong {
+    font-size: 1rem;
+    color: $color-brown-dark;
+  }
+}
+
+.defaultPill {
+  font-size: 0.7rem;
+  background-color: $color-yellow-light;
+  color: $color-brown-dark;
+  font-weight: $weight-bold;
+  padding: 2px 8px;
+  border-radius: $radius-full;
+}
+
+.addrStreet,
+.addrCity,
+.addrPhone {
+  font-size: 0.875rem;
+  color: $color-brown-muted;
+  line-height: 1.5;
+}
+
+.delAddrBtn {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: $color-danger;
+  font-weight: $weight-semibold;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@include tablet {
+  .addressesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+
+    input[style] {
+      grid-column: span 1 !important;
+    }
+  }
+}
+
+@include mobile {
+  .profileHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .tabsRow {
+    flex-direction: column;
+  }
+}
+

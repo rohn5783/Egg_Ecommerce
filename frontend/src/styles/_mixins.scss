@@ -1,0 +1,140 @@
+@use 'variables' as *;
+
+// Breakpoint Mixins
+@mixin mobile {
+  @media (max-width: 640px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 1025px) {
+    @content;
+  }
+}
+
+// Typography Mixins
+@mixin editorial-heading-xl {
+  font-family: $font-editorial;
+  font-weight: $weight-bold;
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: $color-brown-dark;
+}
+
+@mixin editorial-heading-lg {
+  font-family: $font-editorial;
+  font-weight: $weight-bold;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: $color-brown-dark;
+}
+
+@mixin editorial-heading-md {
+  font-family: $font-editorial;
+  font-weight: $weight-semibold;
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  line-height: 1.25;
+  color: $color-brown-dark;
+}
+
+// Flex Center Helper
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Button Presets
+@mixin btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-sm;
+  background-color: $color-yellow-base;
+  color: $color-brown-dark;
+  font-family: $font-sans;
+  font-weight: $weight-bold;
+  font-size: 0.95rem;
+  padding: 14px 28px;
+  border-radius: $radius-full;
+  border: none;
+  cursor: pointer;
+  transition: all $transition-fast;
+  box-shadow: 0 4px 14px rgba(255, 184, 0, 0.3);
+
+  &:hover {
+    background-color: $color-yellow-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 184, 0, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+@mixin btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-sm;
+  background-color: transparent;
+  color: $color-brown-dark;
+  font-family: $font-sans;
+  font-weight: $weight-semibold;
+  font-size: 0.95rem;
+  padding: 13px 26px;
+  border-radius: $radius-full;
+  border: 1.5px solid $color-brown-base;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: rgba(61, 35, 23, 0.05);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Signature Reference Video Card Style
+@mixin product-card-base {
+  background: $color-cream-light;
+  border: 1px solid $color-cream-border;
+  border-radius: $radius-xl;
+  padding: $space-lg;
+  position: relative;
+  overflow: hidden;
+  transition: all $transition-base;
+  box-shadow: $shadow-sm;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-md;
+    border-color: rgba(255, 184, 0, 0.4);
+  }
+}
+

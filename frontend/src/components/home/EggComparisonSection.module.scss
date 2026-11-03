@@ -1,0 +1,227 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.section {
+  position: relative;
+  background-color: #F5D85E;
+  padding: 50px 0 60px;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.tornTop {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.header {
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+  letter-spacing: -0.02em;
+  color: #24120D;
+  margin: 6px 0 10px;
+
+  span {
+    font-weight: 800;
+  }
+}
+
+.subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  color: #4A3A28;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.showcaseWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.canvasArea {
+  width: 100%;
+  height: 380px;
+  position: relative;
+  z-index: 2;
+}
+
+.calloutsLeft {
+  position: absolute;
+  top: 35px;
+  left: 0;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: right;
+  z-index: 8;
+  pointer-events: none;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.calloutsRight {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: left;
+  z-index: 8;
+  pointer-events: none;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.calloutItem {
+  position: relative;
+}
+
+.calloutTitle {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #24120D;
+  margin: 0 0 3px;
+}
+
+.calloutText {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.76rem;
+  color: #5C4A3E;
+  line-height: 1.38;
+  margin: 0;
+  max-width: 220px;
+  display: inline-block;
+}
+
+.arrowSvg {
+  width: 44px;
+  height: 18px;
+  display: block;
+  margin: 4px 0 0 auto;
+}
+
+.arrowSvgLeft {
+  width: 44px;
+  height: 18px;
+  display: block;
+  margin: 4px auto 0 0;
+}
+
+.ampersandWrapper {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.ampersandBadge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ampersand {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 900;
+  font-size: clamp(3.6rem, 6.5vw, 5.0rem);
+  color: #FFAE19;
+  text-shadow: 0 4px 16px rgba(212, 132, 14, 0.45), 0 2px 4px rgba(0, 0, 0, 0.12);
+  line-height: 1;
+}
+
+.chickIcon {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  font-size: 1.8rem;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.18));
+  transform: rotate(8deg);
+}
+
+.cardsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -16px;
+  position: relative;
+  z-index: 12;
+  gap: 20px;
+}
+
+.cardSpacer {
+  flex: 0 0 80px;
+}
+
+.eggCard {
+  flex: 1;
+  max-width: 270px;
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 14px 18px;
+  box-shadow: 0 8px 24px rgba(36, 18, 13, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  text-align: center;
+  margin: 0 auto;
+}
+
+.cardTitle {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: #24120D;
+  margin: 0 0 3px;
+}
+
+.cardDesc {
+  font-family: 'Caveat', cursive, sans-serif;
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: #8C6F5A;
+  margin: 0;
+}
+
+.tornBottom {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 5;
+  pointer-events: none;
+}
