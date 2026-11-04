@@ -69,9 +69,24 @@ export const useCartStore = create<CartState>((set, get) => ({
   fetchCart: async () => {
     try {
       const res = await api.get('/cart');
-      set({ cart: res.data.data });
-      saveStoredCart(res.data.data);
-    } catch {
+      let cart = res.data.data as ICart;
+      const stored = getStoredCart();
+
+      if (cart.items.length === 0 && stored?.items.length) {
+        const mergeRes = await api.post('/cart/merge', {
+          items: stored.items.map((item) => ({
+            productId: item.product._id,
+            quantity: item.quantity,
+            customCartonConfig: item.customCartonConfig,
+          })),
+        });
+        cart = mergeRes.data.data;
+      }
+
+      set({ cart });
+      saveStoredCart(cart);
+    } catch (error) {
+      console.error('Failed to fetch or sync cart:', error);
       const stored = getStoredCart();
       if (stored) set({ cart: stored });
     }
@@ -210,4 +225,3 @@ export const useCartStore = create<CartState>((set, get) => ({
   closeDrawer: () => set({ isDrawerOpen: false }),
   toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
 }));
-

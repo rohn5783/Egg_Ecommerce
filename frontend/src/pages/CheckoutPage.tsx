@@ -15,9 +15,25 @@ declare global {
   }
 }
 
+const loadRazorpayScript = async (): Promise<boolean> => {
+  if (window.Razorpay) return true;
+
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => resolve(Boolean(window.Razorpay));
+    script.onerror = () => {
+      script.remove();
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+};
+
 export const CheckoutPage: React.FC = () => {
   const { cart, fetchCart } = useCartStore();
-  const { user, isAuthenticated } = useAuthStore();
+  const { user } = useAuthStore();
   const navigate = useNavigate();
 
   // Form State
@@ -63,6 +79,12 @@ export const CheckoutPage: React.FC = () => {
     setErrorMsg('');
 
     try {
+      if (paymentMethod === 'RAZORPAY' && !(await loadRazorpayScript())) {
+        setErrorMsg('Could not load Razorpay Checkout. Check your internet connection and try again.');
+        setLoading(false);
+        return;
+      }
+
       const orderPayload = {
         shippingAddress: {
           fullName,
@@ -92,30 +114,11 @@ export const CheckoutPage: React.FC = () => {
       }
 
       // 3. Razorpay flow
-      const razorpayKey = razorpay?.keyId || 'rzp_test_goodeggs_mock_key';
-
-      // If mock key or Razorpay script unavailable, simulate instant sandbox verification
-      if (!window.Razorpay || razorpayKey.includes('mock') || razorpay?.isMock) {
-        console.log('Using dev mode Razorpay simulation...');
-        const verifyRes = await api.post('/orders/verify-payment', {
-          orderId: order._id,
-          razorpayOrderId: razorpay.id,
-          razorpayPaymentId: `pay_mock_${Date.now()}`,
-          razorpaySignature: 'mock_sig_valid',
-        });
-
-        const verifiedOrder = verifyRes.data.data;
-        const existingOrders = JSON.parse(localStorage.getItem('goodeggs_local_orders') || '[]');
-        existingOrders.unshift(verifiedOrder);
-        localStorage.setItem('goodeggs_local_orders', JSON.stringify(existingOrders));
-        localStorage.removeItem('goodeggs_local_cart');
-
-        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-        navigate(`/order-confirmation/${verifiedOrder._id}`);
-        return;
+      if (!razorpay?.keyId || !razorpay?.id || !window.Razorpay) {
+        throw new Error('Razorpay payment is not configured. Please contact the store.');
       }
 
-      // Live Razorpay Modal
+      const razorpayKey = razorpay.keyId;
       const options = {
         key: razorpayKey,
         amount: razorpay.amount,
@@ -146,11 +149,14 @@ export const CheckoutPage: React.FC = () => {
             existingOrders.unshift(verifiedOrder);
             localStorage.setItem('goodeggs_local_orders', JSON.stringify(existingOrders));
             localStorage.removeItem('goodeggs_local_cart');
+            useCartStore.setState({ cart: null });
 
             confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            setLoading(false);
             navigate(`/order-confirmation/${verifiedOrder._id}`);
           } catch (err: any) {
             setErrorMsg(err.response?.data?.message || 'Payment signature verification failed');
+            setLoading(false);
           }
         },
         modal: {
@@ -162,65 +168,12 @@ export const CheckoutPage: React.FC = () => {
 
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', function (resp: any) {
-        setErrorMsg(`Payment failed: ${resp.error.description}`);
+        setErrorMsg(`Payment failed: ${resp.error?.description || 'Please try another payment method.'}`);
         setLoading(false);
       });
       rzp.open();
     } catch (err: any) {
-      if (!err.response || err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
-        const orderNumber = `GE-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
-        const localOrder: any = {
-          _id: `ord_${Date.now()}`,
-          orderNumber,
-          items: cart.items.map((it) => ({
-            product: (it.product as any)?._id || it._id,
-            name: it.product?.name || 'Heritage Farm Eggs',
-            image: it.product?.images?.[0] || '/assets/pack-brown-10-BDXuFFWz.jpg',
-            price: it.price,
-            quantity: it.quantity,
-            eggQuantity: it.product?.eggQuantity || 10,
-            subtotal: it.price * it.quantity,
-          })),
-          shippingAddress: {
-            fullName,
-            phone,
-            street,
-            city,
-            state,
-            pincode,
-            deliveryInstructions: instructions,
-          },
-          subtotal: cart.subtotal,
-          deliveryCharge: cart.deliveryCharge,
-          discountTotal: cart.discountTotal || 0,
-          appliedCoupon: cart.appliedCoupon,
-          finalTotal: cart.finalTotal,
-          paymentStatus: 'PAID',
-          paymentMethod,
-          razorpayPaymentId: `pay_live_${Date.now().toString(36)}`,
-          orderStatus: 'CONFIRMED',
-          timeline: [
-            {
-              status: 'CONFIRMED',
-              timestamp: new Date().toISOString(),
-              note: `Payment verified via Razorpay ID: pay_live_${Date.now().toString(36)}`,
-            },
-          ],
-          estimatedDeliveryDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-          createdAt: new Date().toISOString(),
-        };
-
-        const existingOrders = JSON.parse(localStorage.getItem('goodeggs_local_orders') || '[]');
-        existingOrders.unshift(localOrder);
-        localStorage.setItem('goodeggs_local_orders', JSON.stringify(existingOrders));
-        localStorage.removeItem('goodeggs_local_cart');
-        useCartStore.setState({ cart: null });
-
-        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-        navigate(`/order-confirmation/${localOrder._id}`);
-        return;
-      }
-      setErrorMsg(err.response?.data?.message || 'Checkout failed. Please try again.');
+      setErrorMsg(err.response?.data?.message || err.message || 'Checkout failed. Please try again.');
       setLoading(false);
     }
   };
@@ -453,4 +406,3 @@ export const CheckoutPage: React.FC = () => {
     </div>
   );
 };
-

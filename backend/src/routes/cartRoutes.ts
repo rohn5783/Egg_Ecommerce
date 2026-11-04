@@ -10,10 +10,10 @@ router.use(optionalAuth);
 
 router.get('/', CartController.getCart);
 router.post('/items', CartController.addItem);
+router.post('/merge', CartController.mergeItems);
 router.put('/items/:itemId', CartController.updateQuantity);
 router.delete('/items/:itemId', CartController.removeItem);
 router.post('/coupon', validate(applyCouponSchema), CartController.applyCoupon);
 router.delete('/coupon', CartController.removeCoupon);
 
 export default router;
-

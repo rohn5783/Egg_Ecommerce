@@ -4,120 +4,107 @@ import { ENV } from '../config/env.js';
 
 let razorpayInstance: Razorpay | null = null;
 
-try {
-  if (ENV.RAZORPAY_KEY_ID && ENV.RAZORPAY_KEY_SECRET) {
-    razorpayInstance = new Razorpay({
-      key_id: ENV.RAZORPAY_KEY_ID,
-      key_secret: ENV.RAZORPAY_KEY_SECRET,
-    });
+const timingSafeEqualHex = (actual: string, expected: string): boolean => {
+  if (!/^[\da-f]+$/i.test(actual) || !/^[\da-f]+$/i.test(expected)) return false;
+
+  const actualBuffer = Buffer.from(actual, 'hex');
+  const expectedBuffer = Buffer.from(expected, 'hex');
+  return actualBuffer.length === expectedBuffer.length && crypto.timingSafeEqual(actualBuffer, expectedBuffer);
+};
+
+const getRazorpayInstance = (): Razorpay => {
+  const keyId = ENV.RAZORPAY_KEY_ID.trim();
+  const keySecret = ENV.RAZORPAY_KEY_SECRET.trim();
+  const isTestKey = keyId.startsWith('rzp_test_');
+  const isLiveKey = keyId.startsWith('rzp_live_');
+
+  if (!keyId || !keySecret || (!isTestKey && !isLiveKey)) {
+    throw new Error('Razorpay is not configured. Set a valid Razorpay key ID and secret.');
   }
-} catch (e: any) {
-  console.warn('⚠️ Razorpay initialization warning:', e.message);
-}
+
+  if ((ENV.RAZORPAY_MODE === 'live' && !isLiveKey) || (ENV.RAZORPAY_MODE === 'test' && !isTestKey)) {
+    throw new Error(`Razorpay key does not match configured ${ENV.RAZORPAY_MODE} mode.`);
+  }
+
+  if (!razorpayInstance) {
+    razorpayInstance = new Razorpay({ key_id: keyId, key_secret: keySecret });
+  }
+
+  return razorpayInstance;
+};
 
 export class RazorpayService {
-  static async createOrder(amountInRupees: number, receiptId: string, notes: Record<string, string> = {}) {
-    const amountInPaise = Math.round(amountInRupees * 100);
+  static isConfigured(): boolean {
+    try {
+      getRazorpayInstance();
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
-    // If configured with active Razorpay credentials
-    if (razorpayInstance && !ENV.RAZORPAY_KEY_ID.includes('mock')) {
-      try {
-        const order = await razorpayInstance.orders.create({
-          amount: amountInPaise,
-          currency: 'INR',
-          receipt: receiptId,
-          notes,
-        });
-        return {
-          id: order.id,
-          amount: order.amount,
-          currency: order.currency,
-          keyId: ENV.RAZORPAY_KEY_ID,
-        };
-      } catch (err: any) {
-        console.error('Razorpay order creation error:', err);
-      }
+  static getMode(): 'test' | 'live' {
+    return ENV.RAZORPAY_MODE === 'live' ? 'live' : 'test';
+  }
+
+  static async createOrder(
+    amountInRupees: number,
+    receiptId: string,
+    notes: Record<string, string> = {}
+  ) {
+    if (!Number.isFinite(amountInRupees) || amountInRupees <= 0) {
+      throw new Error('Razorpay order amount must be greater than zero.');
     }
 
-    // Dev/Sandbox Mock Order Generation
-    const mockOrderId = `order_${crypto.randomBytes(10).toString('hex')}`;
-    return {
-      id: mockOrderId,
-      amount: amountInPaise,
+    const instance = getRazorpayInstance();
+    const order = await instance.orders.create({
+      amount: Math.round(amountInRupees * 100),
       currency: 'INR',
+      receipt: receiptId,
+      notes,
+    });
+
+    return {
+      id: order.id,
+      amount: order.amount,
+      currency: order.currency,
       keyId: ENV.RAZORPAY_KEY_ID,
-      isMock: true,
+      mode: this.getMode(),
     };
   }
 
   static verifySignature(orderId: string, paymentId: string, signature: string): boolean {
-    if (!signature) return false;
-    
-    // In dev mode with mock keys, accept mock validation
-    if (orderId.startsWith('order_') && (signature.startsWith('mock_sig_') || ENV.RAZORPAY_KEY_ID.includes('mock'))) {
-      return true;
-    }
+    if (!orderId || !paymentId || !signature || !ENV.RAZORPAY_KEY_SECRET) return false;
 
     const expectedSignature = crypto
       .createHmac('sha256', ENV.RAZORPAY_KEY_SECRET)
       .update(`${orderId}|${paymentId}`)
       .digest('hex');
 
-    return expectedSignature === signature;
+    return timingSafeEqualHex(signature, expectedSignature);
   }
 
   static async fetchPayment(paymentId: string): Promise<any> {
-    if (!paymentId) return null;
-
-    if (razorpayInstance && !ENV.RAZORPAY_KEY_ID.includes('mock')) {
-      try {
-        const payment = await razorpayInstance.payments.fetch(paymentId);
-        return payment;
-      } catch (err: any) {
-        console.error('Razorpay fetchPayment error:', err.message);
-        return null;
-      }
-    }
-
-    // In mock/sandbox mode, return valid mock structure
-    return {
-      id: paymentId,
-      entity: 'payment',
-      currency: 'INR',
-      status: 'captured',
-      isMock: true,
-    };
+    if (!paymentId) throw new Error('Razorpay payment ID is required.');
+    return getRazorpayInstance().payments.fetch(paymentId);
   }
 
   static async capturePayment(paymentId: string, amountInPaise: number): Promise<any> {
-    if (razorpayInstance && !ENV.RAZORPAY_KEY_ID.includes('mock')) {
-      try {
-        const captured = await razorpayInstance.payments.capture(paymentId, amountInPaise, 'INR');
-        return captured;
-      } catch (err: any) {
-        console.error('Razorpay capture error:', err.message);
-        throw err;
-      }
+    if (!paymentId || !Number.isInteger(amountInPaise) || amountInPaise <= 0) {
+      throw new Error('A valid Razorpay payment ID and amount are required for capture.');
     }
 
-    return {
-      id: paymentId,
-      amount: amountInPaise,
-      currency: 'INR',
-      status: 'captured',
-      isMock: true,
-    };
+    return getRazorpayInstance().payments.capture(paymentId, amountInPaise, 'INR');
   }
 
   static verifyWebhookSignature(body: string, signature: string): boolean {
-    if (!ENV.RAZORPAY_WEBHOOK_SECRET || !signature) return false;
+    if (!body || !signature || !ENV.RAZORPAY_WEBHOOK_SECRET) return false;
 
     const expectedSignature = crypto
       .createHmac('sha256', ENV.RAZORPAY_WEBHOOK_SECRET)
       .update(body)
       .digest('hex');
 
-    return expectedSignature === signature;
+    return timingSafeEqualHex(signature, expectedSignature);
   }
 }
-

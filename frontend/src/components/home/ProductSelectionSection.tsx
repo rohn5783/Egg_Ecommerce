@@ -1,24 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useCartStore } from '../../stores/cartStore.js';
+import { api } from '../../services/api.js';
+import { IProduct } from '../../types/index.js';
 import { TornDivider } from '../common/TornDivider.js';
 import styles from './ProductSelectionSection.module.scss';
 
 export const ProductSelectionSection: React.FC = () => {
   const [selectedShell, setSelectedShell] = useState<'brown' | 'white'>('brown');
   const [tappedEgg, setTappedEgg] = useState<string | null>(null);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const { addItem, toggleDrawer } = useCartStore();
 
-  const packData: Record<'brown' | 'white', Array<{ count: number; price: number; img: string; productId: string }>> = {
+  useEffect(() => {
+    api.get('/products', { params: { limit: 100 } })
+      .then((res) => setProducts(res.data.data))
+      .catch((err) => console.error('Failed to load homepage products:', err));
+  }, []);
+
+  const packData: Record<'brown' | 'white', Array<{ count: number; img: string }>> = {
     brown: [
-      { count: 6, price: 84, img: '/assets/pack-brown-6-BbFe4R3C.jpg', productId: 'p-brown-6' },
-      { count: 10, price: 135, img: '/assets/pack-brown-10-BDXuFFWz.jpg', productId: 'p-brown-10' },
-      { count: 12, price: 159, img: '/assets/pack-brown-12-F3leDPlZ.jpg', productId: 'p-brown-12' },
+      { count: 6, img: '/assets/pack-brown-6-BbFe4R3C.jpg' },
+      { count: 10, img: '/assets/pack-brown-10-BDXuFFWz.jpg' },
+      { count: 12, img: '/assets/pack-brown-12-F3leDPlZ.jpg' },
     ],
     white: [
-      { count: 6, price: 78, img: '/assets/pack-white-6-mwYZApsz.jpg', productId: 'p-white-6' },
-      { count: 10, price: 125, img: '/assets/pack-white-10-BbjpCtDS.jpg', productId: 'p-white-10' },
-      { count: 12, price: 149, img: '/assets/pack-white-12-CU-VFrPz.jpg', productId: 'p-white-12' },
+      { count: 6, img: '/assets/pack-white-6-mwYZApsz.jpg' },
+      { count: 10, img: '/assets/pack-white-10-BbjpCtDS.jpg' },
+      { count: 12, img: '/assets/pack-white-12-CU-VFrPz.jpg' },
     ],
   };
 
@@ -73,6 +82,10 @@ export const ProductSelectionSection: React.FC = () => {
         <div className={styles.cardsGrid}>
           {packData[selectedShell].map((pack) => {
             const shellLabel = selectedShell === 'brown' ? 'Brown' : 'White';
+            const eggType = selectedShell === 'brown' ? 'ORGANIC_BROWN' : 'CLASSIC_WHITE';
+            const product = products.find(
+              (item) => item.eggQuantity === pack.count && item.eggType === eggType
+            );
             const eggKey = `${selectedShell}-${pack.count}`;
             const isWobbling = tappedEgg === eggKey;
 
@@ -108,14 +121,17 @@ export const ProductSelectionSection: React.FC = () => {
                     <h3 className={styles.cardTitle}>
                       {shellLabel} Eggs, Pack of {pack.count}
                     </h3>
-                    <div className={styles.cardPrice}>₹{pack.price}</div>
+                    <div className={styles.cardPrice}>
+                      {product ? `₹${product.discountPrice || product.price}` : 'Unavailable'}
+                    </div>
                   </div>
 
                   <button
                     className={styles.buyNowBtn}
-                    onClick={() => handleBuy(pack.productId)}
+                    disabled={!product}
+                    onClick={() => product && handleBuy(product._id)}
                   >
-                    Buy now
+                    {product ? 'Buy now' : 'Unavailable'}
                   </button>
                 </div>
               </motion.div>

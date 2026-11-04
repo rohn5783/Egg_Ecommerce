@@ -85,11 +85,20 @@ npm run dev      # Starts Vite dev server on http://localhost:5173
 
 ---
 
-## 💳 Razorpay Payment Testing
+## 💳 Razorpay Payments
 
-The platform supports both active Razorpay credentials and development sandbox mode:
-1. When real Razorpay API keys (`RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`) are configured in `backend/.env`, the checkout opens the official Razorpay Checkout modal.
-2. In development or test mode with placeholder keys, the backend automatically generates a cryptographic mock order and validates signature verification without requiring external banking credentials.
+Checkout opens Razorpay Checkout for both test and live payments. The backend creates every order through the Razorpay API and verifies the returned signature and payment status before confirming an order. Mock payments are not accepted.
+
+For sandbox payments, add your Razorpay **Test Mode** key ID and secret to `backend/.env`:
+
+```dotenv
+RAZORPAY_MODE=test
+RAZORPAY_KEY_ID=rzp_test_your_key_id
+RAZORPAY_KEY_SECRET=your_test_key_secret
+RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
+```
+
+For production, set `RAZORPAY_MODE=live` and use the matching `rzp_live_` key ID and secret. Keep the key secret and webhook secret on the backend only. The public key ID is returned by the backend to initialize Razorpay Checkout.
 
 ---
 
@@ -141,4 +150,3 @@ egg-web/
 │   └── package.json
 └── README.md
 ```
-

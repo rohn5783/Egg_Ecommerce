@@ -454,6 +454,24 @@
   }
 }
 
+.paymentPaid {
+  background-color: #E8F5E9 !important;
+  border-color: #C8E6C9 !important;
+  color: #2E7D32 !important;
+}
+
+.paymentPending {
+  background-color: #FFF3E0 !important;
+  border-color: #F6D99A !important;
+  color: #96600A !important;
+}
+
+.paymentFailed {
+  background-color: #FFEBEE !important;
+  border-color: #F1C7C4 !important;
+  color: #A8362F !important;
+}
+
 .slipMetaGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -676,6 +694,47 @@
   }
 }
 
+@include mobile {
+  .mainContainer {
+    padding: 32px 16px 56px;
+  }
+
+  .timelineCard,
+  .itemsCard {
+    padding: 22px 18px;
+  }
+
+  .timelineTrack {
+    justify-content: flex-start;
+    gap: 22px;
+    min-width: 600px;
+  }
+
+  .slipHeader {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .slipInvoiceMeta {
+    text-align: left;
+  }
+
+  .paymentSlipCard {
+    padding: 28px 18px;
+    border-radius: $radius-xl;
+  }
+
+  .slipTable {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .slipButtonsRow {
+    flex-direction: column;
+  }
+}
+
 /* Print Optimization Media Query */
 @media print {
   body {
@@ -702,9 +761,14 @@
     padding: 20px !important;
   }
 
+  .slipTable {
+    display: table !important;
+    overflow: visible !important;
+    white-space: normal !important;
+  }
+
   .mainContainer {
     max-width: 100% !important;
     padding: 0 !important;
   }
 }
-

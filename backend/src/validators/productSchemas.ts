@@ -5,7 +5,9 @@ export const createProductSchema = z.object({
   description: z.string().min(10),
   shortDescription: z.string().max(250).optional(),
   images: z.array(z.string().url()).min(1, 'At least one product image is required'),
-  category: z.string(), // ObjectId string
+  category: z
+    .string()
+    .refine((value) => value === '' || /^[a-f\d]{24}$/i.test(value), 'Select a valid product category'),
   eggType: z.enum(['PASTURE_RAISED', 'ORGANIC_BROWN', 'HERITAGE_BLUE', 'CLASSIC_WHITE', 'QUAIL', 'DUCK']),
   eggQuantity: z.number().int().min(1).max(100),
   price: z.number().positive(),
@@ -31,5 +33,6 @@ export const createProductSchema = z.object({
   yolkColorScore: z.number().min(1).max(15).optional(),
 });
 
-export const updateProductSchema = createProductSchema.partial();
-
+export const updateProductSchema = createProductSchema.partial().extend({
+  category: z.string().regex(/^[a-f\d]{24}$/i, 'Select a valid product category').optional(),
+});

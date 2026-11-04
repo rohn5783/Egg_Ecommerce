@@ -16,12 +16,30 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: $z-drawer;
 }
 
 .headerLeft {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.menuToggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: $radius-md;
+  color: $color-cream-light;
+}
+
+.navBackdrop {
+  display: none;
 }
 
 .brand {
@@ -470,12 +488,105 @@
     grid-template-columns: 1fr;
   }
 
+  .adminHeader {
+    padding: 12px 20px;
+  }
+
+  .menuToggle {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  .navBackdrop {
+    display: block;
+    position: fixed;
+    inset: 66px 0 0;
+    z-index: $z-drawer - 1;
+    background: rgba(36, 18, 13, 0.42);
+  }
+
   .adminSidebar {
-    display: none;
+    display: block;
+    position: fixed;
+    top: 66px;
+    bottom: 0;
+    left: 0;
+    width: min(300px, 86vw);
+    overflow-y: auto;
+    z-index: $z-drawer;
+    box-shadow: $shadow-lg;
+    transform: translateX(-105%);
+    visibility: hidden;
+    transition: transform $transition-base, visibility $transition-base;
+  }
+
+  .adminSidebarOpen {
+    transform: translateX(0);
+    visibility: visible;
   }
 
   .kpiGrid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .adminMain {
+    padding: 28px 24px 64px;
+  }
 }
 
+@include mobile {
+  .adminHeader {
+    padding: 10px 14px;
+  }
+
+  .headerLeft {
+    gap: 10px;
+  }
+
+  .adminPill {
+    display: none;
+  }
+
+  .headerRight {
+    gap: 10px;
+  }
+
+  .adminName {
+    display: none;
+  }
+
+  .frontStoreLink {
+    font-size: 0.78rem;
+  }
+
+  .navBackdrop {
+    inset-block-start: 62px;
+  }
+
+  .adminSidebar {
+    top: 62px;
+  }
+
+  .adminMain {
+    padding: 24px 14px 48px;
+  }
+
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .contentHeader {
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  .modalBox {
+    width: calc(100% - 24px);
+    padding: 24px 18px;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}

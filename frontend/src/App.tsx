@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { SmoothScroll } from './components/common/SmoothScroll.js';
+import { useAuthStore } from './stores/authStore.js';
 import { HomePage } from './pages/HomePage.js';
 import { ShopPage } from './pages/ShopPage.js';
 import { ProductDetailPage } from './pages/ProductDetailPage.js';
@@ -19,6 +20,17 @@ import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage.js';
 import { TermsPage } from './pages/TermsPage.js';
 import { AdminDashboardPage } from './pages/AdminDashboardPage.js';
 
+const ProtectedCheckout: React.FC = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+
+  return <CheckoutPage />;
+};
+
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
@@ -28,7 +40,7 @@ export const App: React.FC = () => {
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/products/:slug" element={<ProductDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/checkout" element={<ProtectedCheckout />} />
           <Route path="/order-confirmation/:id" element={<OrderConfirmationPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/orders" element={<OrdersPage />} />

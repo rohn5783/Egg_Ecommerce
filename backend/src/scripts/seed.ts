@@ -156,6 +156,39 @@ const seedData = async () => {
       yolkColorScore: 14,
     },
     {
+      name: 'Brown Eggs — Pack of 12',
+      slug: 'brown-eggs-pack-of-12',
+      description: 'A dozen pasture-raised brown eggs with rich golden yolks, gathered fresh and packed in a protective molded-pulp carton.',
+      shortDescription: '12 pasture-raised brown eggs gathered at sunrise.',
+      images: [
+        'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=800&q=80',
+      ],
+      category: categories[0]._id,
+      eggType: 'ORGANIC_BROWN',
+      eggQuantity: 12,
+      price: 249,
+      discountPrice: 219,
+      stockQuantity: 100,
+      sku: 'GE-BROWN-12',
+      nutritionInfo: {
+        calories: 73,
+        protein: '6.5g',
+        totalFat: '4.8g',
+        omega3: '245mg',
+        vitaminD: '1.3mcg',
+        lutein: '260mcg',
+        cholesterol: '182mg',
+      },
+      packagingInfo: '12-pocket moulded pulp carton with interlocking tabs.',
+      farmingPractice: 'Ethical small family farms, 108+ sq ft per hen.',
+      status: 'ACTIVE',
+      isFeatured: true,
+      ratingsAverage: 4.9,
+      ratingsCount: 48,
+      shellColor: 'Deep Rustic Amber',
+      yolkColorScore: 14,
+    },
+    {
       name: 'Brown Eggs — Pack of 15',
       slug: 'brown-eggs-pack-of-15',
       description: '15 pasture-raised farm brown eggs for serious breakfast and brunch fans. Maximum freshness in a double-cushioned carton.',
@@ -550,4 +583,3 @@ seedData().catch((err) => {
   console.error('Seeding failed:', err);
   process.exit(1);
 });
-

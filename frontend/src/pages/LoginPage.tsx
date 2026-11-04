@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogIn, ArrowRight, Shield, AlertCircle, Sparkles, X } from 'lucide-react';
 import { Navbar } from '../components/common/Navbar.js';
 import { Footer } from '../components/common/Footer.js';
@@ -22,13 +22,15 @@ export const LoginPage: React.FC = () => {
   const [customGoogleEmail, setCustomGoogleEmail] = useState('');
   const { login, googleLogin, isLoading, error, clearError, user } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handlePostAuthRedirect = () => {
     const currentUser = useAuthStore.getState().user;
     if (currentUser?.role === 'ADMIN') {
       navigate('/admin');
     } else {
-      navigate('/');
+      const returnPath = (location.state as { from?: string } | null)?.from;
+      navigate(returnPath === '/checkout' ? '/checkout' : '/');
     }
   };
 
@@ -260,4 +262,3 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
-

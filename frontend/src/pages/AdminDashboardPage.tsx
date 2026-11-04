@@ -19,12 +19,23 @@ import {
   ArrowLeft,
   Printer,
   FileText,
+  Menu,
+  X,
 } from 'lucide-react';
 import { Navbar } from '../components/common/Navbar.js';
 import { useAuthStore } from '../stores/authStore.js';
 import { api } from '../services/api.js';
 import { IProduct, IOrder, IUser, ICoupon, IReview } from '../types/index.js';
 import styles from './AdminDashboardPage.module.scss';
+
+interface ProductForm {
+  name: string;
+  description: string;
+  price: string;
+  stockQuantity: number;
+  status: 'ACTIVE' | 'INACTIVE';
+  shellColor: string;
+}
 
 export const AdminDashboardPage: React.FC = () => {
   const { user, isAuthenticated } = useAuthStore();
@@ -34,6 +45,7 @@ export const AdminDashboardPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     'stats' | 'products' | 'orders' | 'inventory' | 'coupons' | 'reviews' | 'customers'
   >('stats');
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   // Stats Data
   const [stats, setStats] = useState<any>(null);
@@ -43,18 +55,13 @@ export const AdminDashboardPage: React.FC = () => {
   // Products Data
   const [products, setProducts] = useState<IProduct[]>([]);
   const [showProductModal, setShowProductModal] = useState(false);
-  const [productForm, setProductForm] = useState<any>({
+  const [productForm, setProductForm] = useState<ProductForm>({
     name: '',
     description: '',
-    shortDescription: '',
-    price: 249,
-    discountPrice: 219,
+    price: '0',
     stockQuantity: 100,
-    eggType: 'PASTURE_RAISED',
-    eggQuantity: 12,
-    sku: '',
-    images: ['https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=800&q=80'],
-    category: '',
+    status: 'ACTIVE',
+    shellColor: 'Brown',
   });
 
   // Orders Data
@@ -296,22 +303,25 @@ export const AdminDashboardPage: React.FC = () => {
   const handleCreateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Find or assign first category ID if empty
-      let catId = productForm.category;
-      if (!catId) {
-        const catRes = await api.get('/categories');
-        if (catRes.data.data.length > 0) {
-          catId = catRes.data.data[0]._id;
-        }
-      }
-
       await api.post('/admin/products', {
         ...productForm,
-        category: catId,
-        sku: productForm.sku || `GE-CUSTOM-${Date.now().toString(36).toUpperCase()}`,
+        price: Number(productForm.price),
+        category: '',
+        eggType: productForm.shellColor.toLowerCase().includes('white') ? 'CLASSIC_WHITE' : 'ORGANIC_BROWN',
+        eggQuantity: 12,
+        images: ['https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=800&q=80'],
+        sku: `GE-CUSTOM-${Date.now().toString(36).toUpperCase()}`,
       });
 
       setShowProductModal(false);
+      setProductForm({
+        name: '',
+        description: '',
+        price: '0',
+        stockQuantity: 100,
+        status: 'ACTIVE',
+        shellColor: 'Brown',
+      });
       loadProducts();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Create product failed');
@@ -350,6 +360,15 @@ export const AdminDashboardPage: React.FC = () => {
     <div className={styles.adminWrapper}>
       <header className={styles.adminHeader}>
         <div className={styles.headerLeft}>
+          <button
+            type="button"
+            className={styles.menuToggle}
+            aria-label={isNavOpen ? 'Close admin menu' : 'Open admin menu'}
+            aria-expanded={isNavOpen}
+            onClick={() => setIsNavOpen((open) => !open)}
+          >
+            {isNavOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
           <Link to="/" className={styles.brand}>
             <span>🥚 GoodEggs</span>
           </Link>
@@ -366,54 +385,83 @@ export const AdminDashboardPage: React.FC = () => {
       </header>
 
       <div className={styles.adminLayout}>
+        {isNavOpen && (
+          <button
+            type="button"
+            className={styles.navBackdrop}
+            aria-label="Close admin menu"
+            onClick={() => setIsNavOpen(false)}
+          />
+        )}
         {/* Navigation Sidebar */}
-        <aside className={styles.adminSidebar}>
+        <aside className={`${styles.adminSidebar} ${isNavOpen ? styles.adminSidebarOpen : ''}`}>
           <nav className={styles.sidebarNav}>
             <button
               className={`${styles.navItem} ${activeTab === 'stats' ? styles.active : ''}`}
-              onClick={() => setActiveTab('stats')}
+              onClick={() => {
+                setActiveTab('stats');
+                setIsNavOpen(false);
+              }}
             >
               <TrendingUp size={18} />
               <span>Dashboard & Analytics</span>
             </button>
             <button
               className={`${styles.navItem} ${activeTab === 'products' ? styles.active : ''}`}
-              onClick={() => setActiveTab('products')}
+              onClick={() => {
+                setActiveTab('products');
+                setIsNavOpen(false);
+              }}
             >
               <Package size={18} />
               <span>Products Management</span>
             </button>
             <button
               className={`${styles.navItem} ${activeTab === 'orders' ? styles.active : ''}`}
-              onClick={() => setActiveTab('orders')}
+              onClick={() => {
+                setActiveTab('orders');
+                setIsNavOpen(false);
+              }}
             >
               <ShoppingBag size={18} />
               <span>Morning Orders</span>
             </button>
             <button
               className={`${styles.navItem} ${activeTab === 'inventory' ? styles.active : ''}`}
-              onClick={() => setActiveTab('inventory')}
+              onClick={() => {
+                setActiveTab('inventory');
+                setIsNavOpen(false);
+              }}
             >
               <AlertTriangle size={18} />
               <span>Inventory & Stocks</span>
             </button>
             <button
               className={`${styles.navItem} ${activeTab === 'coupons' ? styles.active : ''}`}
-              onClick={() => setActiveTab('coupons')}
+              onClick={() => {
+                setActiveTab('coupons');
+                setIsNavOpen(false);
+              }}
             >
               <Tag size={18} />
               <span>Coupons & Promos</span>
             </button>
             <button
               className={`${styles.navItem} ${activeTab === 'reviews' ? styles.active : ''}`}
-              onClick={() => setActiveTab('reviews')}
+              onClick={() => {
+                setActiveTab('reviews');
+                setIsNavOpen(false);
+              }}
             >
               <MessageSquare size={18} />
               <span>Review Moderation</span>
             </button>
             <button
               className={`${styles.navItem} ${activeTab === 'customers' ? styles.active : ''}`}
-              onClick={() => setActiveTab('customers')}
+              onClick={() => {
+                setActiveTab('customers');
+                setIsNavOpen(false);
+              }}
             >
               <Users size={18} />
               <span>Customers</span>
@@ -554,15 +602,9 @@ export const AdminDashboardPage: React.FC = () => {
                         value={productForm.name}
                         onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
                       />
-                      <input
-                        type="text"
-                        placeholder="Short description"
-                        value={productForm.shortDescription}
-                        onChange={(e) => setProductForm({ ...productForm, shortDescription: e.target.value })}
-                      />
                       <textarea
                         required
-                        placeholder="Full Product Description..."
+                        placeholder="Full description"
                         rows={3}
                         value={productForm.description}
                         onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
@@ -571,30 +613,47 @@ export const AdminDashboardPage: React.FC = () => {
                         <input
                           type="number"
                           required
+                          min="0"
                           placeholder="Price (₹)"
                           value={productForm.price}
-                          onChange={(e) => setProductForm({ ...productForm, price: Number(e.target.value) })}
-                        />
-                        <input
-                          type="number"
-                          placeholder="Discount Price (₹)"
-                          value={productForm.discountPrice}
-                          onChange={(e) => setProductForm({ ...productForm, discountPrice: Number(e.target.value) })}
+                          onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
                         />
                         <input
                           type="number"
                           required
-                          placeholder="Egg Count"
-                          value={productForm.eggQuantity}
-                          onChange={(e) => setProductForm({ ...productForm, eggQuantity: Number(e.target.value) })}
-                        />
-                        <input
-                          type="number"
-                          required
-                          placeholder="Stock Quantity"
+                          placeholder="Quantity"
                           value={productForm.stockQuantity}
                           onChange={(e) => setProductForm({ ...productForm, stockQuantity: Number(e.target.value) })}
                         />
+                      </div>
+                      <div className={styles.formRow}>
+                        <select
+                          required
+                          aria-label="Egg color"
+                          value={productForm.shellColor}
+                          onChange={(e) =>
+                            setProductForm({
+                              ...productForm,
+                              shellColor: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="White">White</option>
+                          <option value="Brown">Brown</option>
+                        </select>
+                        <select
+                          aria-label="Product availability"
+                          value={productForm.status}
+                          onChange={(e) =>
+                            setProductForm({
+                              ...productForm,
+                              status: e.target.value === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE',
+                            })
+                          }
+                        >
+                          <option value="ACTIVE">Available</option>
+                          <option value="INACTIVE">Unavailable</option>
+                        </select>
                       </div>
                       <div className={styles.modalActions}>
                         <button
@@ -604,7 +663,10 @@ export const AdminDashboardPage: React.FC = () => {
                         >
                           Cancel
                         </button>
-                        <button type="submit" className="btn-primary">
+                        <button
+                          type="submit"
+                          className="btn-primary"
+                        >
                           Publish Pack
                         </button>
                       </div>
@@ -617,33 +679,37 @@ export const AdminDashboardPage: React.FC = () => {
                 <table className={styles.adminTable}>
                   <thead>
                     <tr>
-                      <th>Product</th>
-                      <th>SKU</th>
-                      <th>Egg Count</th>
+                      <th>Pack name &amp; description</th>
                       <th>Price</th>
-                      <th>Stock</th>
-                      <th>Rating</th>
+                      <th>Quantity</th>
+                      <th>Availability</th>
+                      <th>Egg color</th>
                     </tr>
                   </thead>
                   <tbody>
                     {products.map((p) => (
                       <tr key={p._id}>
                         <td className={styles.prodCell}>
-                          <img src={p.images[0]} alt="" />
-                          <strong>{p.name}</strong>
+                          <div>
+                            <strong>{p.name}</strong>
+                            <span className={styles.subAddr}>{p.description}</span>
+                          </div>
                         </td>
-                        <td>{p.sku}</td>
-                        <td>{p.eggQuantity} Eggs</td>
                         <td>
                           <strong>₹{p.discountPrice || p.price}</strong>
                           {p.discountPrice && <span className={styles.origPrice}>₹{p.price}</span>}
                         </td>
                         <td>
-                          <span className={p.stockQuantity <= 15 ? styles.stockLow : styles.stockOk}>
-                            {p.stockQuantity} units
-                          </span>
+                          {p.stockQuantity}
                         </td>
-                        <td>★ {p.ratingsAverage}</td>
+                        <td>
+                          {p.status === 'ACTIVE' && p.stockQuantity > 0 ? (
+                            <span className={styles.stockOk}>Available</span>
+                          ) : (
+                            <span className={styles.stockLow}>Unavailable</span>
+                          )}
+                        </td>
+                        <td>{p.shellColor || 'Not specified'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -1041,4 +1107,3 @@ export const AdminDashboardPage: React.FC = () => {
     </div>
   );
 };
-

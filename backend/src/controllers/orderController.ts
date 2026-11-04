@@ -11,6 +11,9 @@ import { ApiError } from '../utils/apiError.js';
 
 export class OrderController {
   static async createOrder(req: AuthRequest, res: Response, next: NextFunction) {
+    let orderNumber = '';
+    const reservedProductIds: string[] = [];
+
     try {
       const { shippingAddress, paymentMethod = 'RAZORPAY' } = req.body;
 
@@ -27,13 +30,13 @@ export class OrderController {
       }
 
       // 3. Verify stock & reserve inventory
-      const orderNumber = `GE-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
+      orderNumber = `GE-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
 
       const orderItems: IOrderItem[] = [];
       for (const item of cart.items as any[]) {
         const prod = item.product;
         if (!prod || prod.status !== 'ACTIVE') {
-          return next(ApiError.badRequest(`Item "${prod?.name || 'Unknown'}" is currently unavailable`));
+          throw ApiError.badRequest(`Item "${prod?.name || 'Unknown'}" is currently unavailable`);
         }
 
         // Reserve inventory atomically
@@ -42,6 +45,7 @@ export class OrderController {
           item.quantity,
           orderNumber
         );
+        reservedProductIds.push(prod._id.toString());
 
         const unitPrice = prod.discountPrice || prod.price;
         orderItems.push({
@@ -100,6 +104,9 @@ export class OrderController {
         razorpay: razorpayOrderData,
       }, 'Order initialized successfully');
     } catch (err) {
+      await Promise.allSettled(
+        reservedProductIds.map((productId) => InventoryService.releaseReservation(productId, orderNumber))
+      );
       next(err);
     }
   }
@@ -120,13 +127,17 @@ export class OrderController {
         return next(ApiError.forbidden('Unauthorized: You do not own this order'));
       }
 
+      if (order.paymentMethod !== 'RAZORPAY') {
+        return next(ApiError.badRequest('This order is not using Razorpay'));
+      }
+
       // 2. Prevent Double Payment / Duplicate Execution
       if (order.paymentStatus === 'PAID') {
         return ApiResponse.success(res, order, 'Order has already been paid and confirmed');
       }
 
       // 3. Verify Razorpay Order ID matches order record
-      if (order.razorpayOrderId && order.razorpayOrderId !== razorpayOrderId) {
+      if (!order.razorpayOrderId || order.razorpayOrderId !== razorpayOrderId) {
         return next(ApiError.badRequest('Security violation: Razorpay order ID does not match order record'));
       }
 
@@ -167,34 +178,31 @@ export class OrderController {
       const expectedAmountInPaise = Math.round(order.finalTotal * 100);
       const razorpayPaymentDetails = await RazorpayService.fetchPayment(razorpayPaymentId);
 
-      if (razorpayPaymentDetails && !razorpayPaymentDetails.isMock) {
-        // Verify Currency
-        if (razorpayPaymentDetails.currency !== 'INR') {
-          return next(ApiError.badRequest('Invalid payment currency: Only INR is accepted'));
-        }
+      if (razorpayPaymentDetails.currency !== 'INR') {
+        return next(ApiError.badRequest('Invalid payment currency: Only INR is accepted'));
+      }
 
-        // Verify Amount (prevents client-side amount tampering)
-        if (razorpayPaymentDetails.amount !== expectedAmountInPaise) {
-          return next(
-            ApiError.badRequest(
-              `Payment amount mismatch: Expected ₹${order.finalTotal} but received ₹${razorpayPaymentDetails.amount / 100}`
-            )
-          );
-        }
+      if (razorpayPaymentDetails.amount !== expectedAmountInPaise) {
+        return next(
+          ApiError.badRequest(
+            `Payment amount mismatch: Expected ₹${order.finalTotal} but received ₹${razorpayPaymentDetails.amount / 100}`
+          )
+        );
+      }
 
-        // Verify Razorpay Order ID link
-        if (razorpayPaymentDetails.order_id && razorpayPaymentDetails.order_id !== razorpayOrderId) {
-          return next(ApiError.badRequest('Payment record does not link to the corresponding order'));
-        }
+      if (razorpayPaymentDetails.order_id !== razorpayOrderId) {
+        return next(ApiError.badRequest('Payment record does not link to the corresponding order'));
+      }
 
-        // If status is authorized, capture it
-        if (razorpayPaymentDetails.status === 'authorized') {
-          await RazorpayService.capturePayment(razorpayPaymentId, expectedAmountInPaise);
-        } else if (razorpayPaymentDetails.status !== 'captured') {
-          return next(
-            ApiError.badRequest(`Payment is not in captured status (current: ${razorpayPaymentDetails.status})`)
-          );
+      if (razorpayPaymentDetails.status === 'authorized') {
+        const capturedPayment = await RazorpayService.capturePayment(razorpayPaymentId, expectedAmountInPaise);
+        if (capturedPayment.status !== 'captured') {
+          return next(ApiError.badRequest('Razorpay could not capture the payment'));
         }
+      } else if (razorpayPaymentDetails.status !== 'captured') {
+        return next(
+          ApiError.badRequest(`Payment is not in captured status (current: ${razorpayPaymentDetails.status})`)
+        );
       }
 
       // 7. Update Order Status to PAID & CONFIRMED

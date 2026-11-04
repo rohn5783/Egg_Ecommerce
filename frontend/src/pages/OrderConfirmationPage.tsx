@@ -46,12 +46,20 @@ export const OrderConfirmationPage: React.FC = () => {
 
   const stages = ['PENDING', 'CONFIRMED', 'PROCESSING', 'PACKED', 'SHIPPED', 'DELIVERED'];
 
+  const getPaymentStatusClass = (status: IOrder['paymentStatus']) => {
+    if (status === 'PAID') return styles.paymentPaid;
+    if (status === 'PENDING') return styles.paymentPending;
+    return styles.paymentFailed;
+  };
+
   const getStageIndex = (status: string) => {
     const idx = stages.indexOf(status);
     return idx === -1 ? 1 : idx;
   };
 
   const currentStageIdx = order ? getStageIndex(order.orderStatus) : 1;
+  const getPaymentStatusLabel = (status: IOrder['paymentStatus']) =>
+    status === 'PAID' ? 'PAID & VERIFIED' : status;
 
   const handleDownloadSlip = () => {
     if (!order) return;
@@ -77,6 +85,8 @@ export const OrderConfirmationPage: React.FC = () => {
         </tr>`
       )
       .join('');
+    const paymentStatusLabel = getPaymentStatusLabel(order.paymentStatus);
+    const paymentStatusClass = `status-${order.paymentStatus.toLowerCase()}`;
 
     const slipHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -148,6 +158,26 @@ export const OrderConfirmationPage: React.FC = () => {
       padding: 3px 8px;
       border-radius: 99px;
       border: 1px solid #C8E6C9;
+      margin-top: 6px;
+    }
+    .status-pending {
+      display: inline-block;
+      background: #FFF3E0;
+      color: #96600A;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 99px;
+      margin-top: 6px;
+    }
+    .status-failed, .status-refunded {
+      display: inline-block;
+      background: #FFEBEE;
+      color: #A8362F;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 99px;
       margin-top: 6px;
     }
     .grid {
@@ -245,7 +275,7 @@ export const OrderConfirmationPage: React.FC = () => {
       <span class="badge">Official Tax Invoice</span>
       <div class="inv-num">INV-${order.orderNumber}</div>
       <div class="date">${formattedDate}</div>
-      <div class="status-paid">✓ PAID & VERIFIED</div>
+      <div class="${paymentStatusClass}">${paymentStatusLabel}</div>
     </div>
   </div>
 
@@ -489,8 +519,9 @@ export const OrderConfirmationPage: React.FC = () => {
                     minute: '2-digit',
                   })}
                 </div>
-                <div className={styles.slipStatusPaid}>
-                  <Check size={14} /> PAID & VERIFIED
+                <div className={`${styles.slipStatusPaid} ${getPaymentStatusClass(order.paymentStatus)}`}>
+                  {order.paymentStatus === 'PAID' ? <Check size={14} /> : <Clock size={14} />}
+                  {getPaymentStatusLabel(order.paymentStatus)}
                 </div>
               </div>
             </div>
@@ -508,7 +539,7 @@ export const OrderConfirmationPage: React.FC = () => {
               </div>
 
               <div className={styles.slipMetaBox}>
-                <h4>Payment & Verification Details</h4>
+                <h4>Payment details</h4>
                 <p>
                   <strong>Payment Mode:</strong>{' '}
                   {order.paymentMethod === 'RAZORPAY'
@@ -536,7 +567,7 @@ export const OrderConfirmationPage: React.FC = () => {
                   <th>HSN Code</th>
                   <th>Qty</th>
                   <th>Rate</th>
-                  <th>GST Rate</th>
+                  <th>Tax</th>
                   <th>Amount</th>
                 </tr>
               </thead>
@@ -547,12 +578,12 @@ export const OrderConfirmationPage: React.FC = () => {
                     <td>
                       <strong>{item.name}</strong>
                       <br />
-                      <span className={styles.hsnCode}>{item.eggQuantity} Eggs • Farm Fresh</span>
+                      <span className={styles.hsnCode}>{item.eggQuantity} eggs · Farm fresh</span>
                     </td>
                     <td className={styles.hsnCode}>04071100</td>
                     <td>{item.quantity}</td>
                     <td>₹{item.price}</td>
-                    <td>0% (Agricultural Produce)</td>
+                    <td>0% (Farm produce)</td>
                     <td>₹{item.subtotal}</td>
                   </tr>
                 ))}
@@ -597,10 +628,10 @@ export const OrderConfirmationPage: React.FC = () => {
             {/* Slip Action Buttons (Print & Download) */}
             <div className={styles.slipButtonsRow}>
               <button onClick={() => window.print()} className={styles.printSlipBtn}>
-                <Printer size={16} /> Print Payment Slip
+                <Printer size={16} /> Print invoice
               </button>
               <button onClick={handleDownloadSlip} className={styles.downloadSlipBtn}>
-                <Download size={16} /> Download Slip (.HTML / Receipt)
+                <Download size={16} /> Download invoice
               </button>
             </div>
 
@@ -616,4 +647,3 @@ export const OrderConfirmationPage: React.FC = () => {
     </div>
   );
 };
-

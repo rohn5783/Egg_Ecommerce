@@ -1,5 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { Product } from '../models/Product.js';
+import { Category } from '../models/Category.js';
 import { Order } from '../models/Order.js';
 import { User } from '../models/User.js';
 import { Inventory } from '../models/Inventory.js';
@@ -80,6 +81,34 @@ export class AdminController {
   static async createProduct(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const productData = req.body;
+      if (productData.category) {
+        const category = await Category.findById(productData.category);
+        if (!category || !category.isActive) {
+          return next(ApiError.badRequest('Select an active product category'));
+        }
+        productData.category = category._id;
+      } else {
+        let category = await Category.findOne({ isActive: true }).sort({ displayOrder: 1, name: 1 });
+        if (!category) {
+          category = await Category.findOneAndUpdate(
+            { slug: 'general' },
+            {
+              $setOnInsert: {
+                name: 'General',
+                slug: 'general',
+                description: 'General farm products',
+                isActive: true,
+              },
+            },
+            { new: true, upsert: true, setDefaultsOnInsert: true }
+          );
+        }
+        if (!category) {
+          return next(ApiError.internal('Could not create a default product category'));
+        }
+        productData.category = category._id;
+      }
+
       const slug = productData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
       productData.slug = `${slug}-${Date.now().toString(36)}`;
 
@@ -101,6 +130,11 @@ export class AdminController {
   static async updateProduct(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      if (req.body.category) {
+        const categoryExists = await Category.exists({ _id: req.body.category, isActive: true });
+        if (!categoryExists) return next(ApiError.badRequest('Select an active product category'));
+      }
+
       const product = await Product.findByIdAndUpdate(id, { $set: req.body }, { new: true });
       if (!product) return next(ApiError.notFound('Product not found'));
 
@@ -301,4 +335,3 @@ export class AdminController {
     }
   }
 }
-

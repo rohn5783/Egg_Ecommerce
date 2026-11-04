@@ -1,7 +1,15 @@
 import dotenv from 'dotenv';
-import path from 'path';
 
 dotenv.config();
+
+const inferRazorpayMode = (keyId?: string): 'test' | 'live' => {
+  return keyId?.trim().startsWith('rzp_live_') ? 'live' : 'test';
+};
+
+const configuredRazorpayMode = process.env.RAZORPAY_MODE?.trim().toLowerCase();
+if (configuredRazorpayMode && !['test', 'live'].includes(configuredRazorpayMode)) {
+  throw new Error('RAZORPAY_MODE must be either "test" or "live".');
+}
 
 export const ENV = {
   PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : 5000,
@@ -15,12 +23,12 @@ export const ENV = {
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
-  RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || 'rzp_test_goodeggs_mock_key',
-  RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET || 'rzp_test_secret_mock_goodeggs_key',
-  RAZORPAY_WEBHOOK_SECRET: process.env.RAZORPAY_WEBHOOK_SECRET || 'rzp_webhook_secret_key',
+  RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || '',
+  RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET || '',
+  RAZORPAY_WEBHOOK_SECRET: process.env.RAZORPAY_WEBHOOK_SECRET || '',
+  RAZORPAY_MODE: configuredRazorpayMode || inferRazorpayMode(process.env.RAZORPAY_KEY_ID),
   RESEND_API_KEY: process.env.RESEND_API_KEY || '',
   EMAIL_FROM: process.env.EMAIL_FROM || 'orders@goodeggs.farm',
   ACCESS_TOKEN_EXPIRY: '15m',
   REFRESH_TOKEN_EXPIRY: '7d',
 };
-

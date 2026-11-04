@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Clock, ChevronRight, AlertCircle, Eye, ShoppingBag, FileText, Printer } from 'lucide-react';
+import { Package, CalendarDays, ChevronRight, AlertCircle, ShoppingBag, FileText, MapPin } from 'lucide-react';
 import { api } from '../services/api.js';
 import { Navbar } from '../components/common/Navbar.js';
 import { Footer } from '../components/common/Footer.js';
 import { IOrder } from '../types/index.js';
-import styles from './ProfilePage.module.scss';
+import styles from './OrdersPage.module.scss';
 
 export const OrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -40,104 +40,121 @@ export const OrdersPage: React.FC = () => {
     fetchOrders();
   }, []);
 
-  const getStatusClass = (status: string) => {
-    switch (status) {
-      case 'DELIVERED':
-        return styles.statusSuccess;
-      case 'CANCELLED':
-      case 'REFUNDED':
-        return styles.statusDanger;
-      case 'SHIPPED':
-      case 'OUT_FOR_DELIVERY':
-        return styles.statusWarning;
-      default:
-        return styles.statusNeutral;
-    }
-  };
+  const getStatusClass = (status: string) =>
+    styles[`status${status.toLowerCase().replace(/(^|_)([a-z])/g, (_, _separator, letter: string) => letter.toUpperCase())}`] ||
+    styles.statusPending;
 
   return (
-    <div className={styles.profileWrapper}>
+    <div className={styles.pageWrapper}>
       <Navbar />
-      <div className={styles.container}>
+      <main className={styles.container}>
         <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>My Orders &amp; Farm Deliveries</h1>
-          <p className={styles.pageSubtitle}>
-            Track your morning egg shipments, review past deliveries, and download receipts.
-          </p>
+          <div>
+            <span className={styles.eyebrow}>Your GoodEggs account</span>
+            <h1 className={styles.pageTitle}>My orders</h1>
+            <p className={styles.pageSubtitle}>Track deliveries and find invoices for your farm-fresh orders.</p>
+          </div>
+          {!loading && orders.length > 0 && (
+            <div className={styles.orderCount}>
+              <Package size={18} />
+              <span>{orders.length} {orders.length === 1 ? 'order' : 'orders'}</span>
+            </div>
+          )}
         </div>
 
         {error && (
-          <div className={styles.errorNotice}>
+          <div className={styles.errorNotice} role="alert">
             <AlertCircle size={20} />
             <span>{error}</span>
           </div>
         )}
 
         {loading ? (
-          <div className={styles.loadingBox}>
-            <p>Loading your farm orders...</p>
+          <div className={styles.ordersList} aria-label="Loading orders">
+            {[1, 2].map((item) => <div key={item} className={styles.loadingCard} />)}
           </div>
         ) : orders.length === 0 ? (
           <div className={styles.emptyState}>
-            <Package size={56} className={styles.emptyIcon} />
-            <h2>No Orders Yet</h2>
+            <span className={styles.emptyIcon}><Package size={32} /></span>
+            <h2>No orders yet</h2>
             <p>You haven’t ordered any fresh pasture eggs yet. Better mornings begin right here!</p>
-            <Link to="/shop" className={styles.primaryActionBtn}>
+            <Link to="/shop" className={styles.shopLink}>
               <ShoppingBag size={18} />
-              <span>Explore Farm Shop</span>
+              <span>Explore the farm shop</span>
             </Link>
           </div>
         ) : (
           <div className={styles.ordersList}>
-            {orders.map((order) => (
+            {[...orders].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((order) => (
               <div key={order._id} className={styles.orderCard}>
                 <div className={styles.orderTopRow}>
-                  <div>
-                    <span className={styles.orderNum}>Order #{order.orderNumber}</span>
+                  <div className={styles.orderHeading}>
+                    <span className={styles.orderLabel}>Order</span>
+                    <strong className={styles.orderNum}>#{order.orderNumber}</strong>
                     <span className={styles.orderDate}>
-                      Placed on {new Date(order.createdAt).toLocaleDateString()}
+                      <CalendarDays size={14} />
+                      {new Date(order.createdAt).toLocaleDateString('en-IN', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
                     </span>
                   </div>
-                  <span className={`${styles.statusBadge} ${getStatusClass(order.orderStatus)}`}>
-                    {order.orderStatus.replace('_', ' ')}
-                  </span>
+                  <div className={styles.badges}>
+                    <span className={`${styles.statusBadge} ${getStatusClass(order.orderStatus)}`}>
+                      {order.orderStatus.replace(/_/g, ' ')}
+                    </span>
+                    <span className={`${styles.paymentBadge} ${order.paymentStatus === 'PAID' ? styles.paid : ''}`}>
+                      {order.paymentStatus === 'PAID' ? 'Paid' : order.paymentStatus}
+                    </span>
+                  </div>
                 </div>
 
-                <div className={styles.orderItemsPreview}>
-                  {order.items.map((item, idx) => (
-                    <div key={idx} className={styles.previewItem}>
-                      <img src={item.image} alt={item.name} className={styles.itemThumb} />
-                      <div className={styles.itemMeta}>
-                        <span className={styles.itemName}>{item.name}</span>
-                        <span className={styles.itemQty}>
-                          Qty: {item.quantity} × ₹{item.price}
-                        </span>
+                <div className={styles.orderContent}>
+                  <div className={styles.orderItemsPreview}>
+                    {order.items.slice(0, 3).map((item, idx) => (
+                      <div key={`${item.product}-${idx}`} className={styles.previewItem}>
+                        {item.image ? (
+                          <img src={item.image} alt="" className={styles.itemThumb} />
+                        ) : (
+                          <span className={styles.itemPlaceholder}><Package size={18} /></span>
+                        )}
+                        <div className={styles.itemMeta}>
+                          <span className={styles.itemName}>{item.name}</span>
+                          <span className={styles.itemQty}>{item.quantity} × ₹{item.price}</span>
+                        </div>
                       </div>
+                    ))}
+                    {order.items.length > 3 && (
+                      <span className={styles.moreItems}>+{order.items.length - 3} more items</span>
+                    )}
+                  </div>
+
+                  <div className={styles.orderSummary}>
+                    <div className={styles.delivery}>
+                      <MapPin size={15} />
+                      <span>{order.shippingAddress?.city || 'Delivery address'}</span>
                     </div>
-                  ))}
+                    <div className={styles.totalBlock}>
+                      <span>Order total</span>
+                      <strong>₹{order.finalTotal.toLocaleString('en-IN')}</strong>
+                    </div>
+                  </div>
                 </div>
 
-                <div className={styles.orderBottomRow}>
-                  <div className={styles.totalBlock}>
-                    <span>Total Amount</span>
-                    <strong>₹{order.finalTotal}</strong>
-                  </div>
-
-                  <div className={styles.actionsBlock}>
-                    <Link to={`/order-confirmation/${order._id}`} className={styles.viewTimelineBtn}>
-                      <FileText size={16} />
-                      <span>Payment Slip & Tracking</span>
-                      <ChevronRight size={14} />
-                    </Link>
-                  </div>
+                <div className={styles.orderActions}>
+                  <Link to={`/order-confirmation/${order._id}`} className={styles.viewOrderLink}>
+                    <FileText size={16} />
+                    <span>View order &amp; invoice</span>
+                    <ChevronRight size={16} />
+                  </Link>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </main>
       <Footer />
     </div>
   );
 };
-

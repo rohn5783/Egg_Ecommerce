@@ -6,6 +6,15 @@ import { AuthRequest } from '../middleware/auth.js';
 import { ApiResponse } from '../utils/apiResponse.js';
 import { ApiError } from '../utils/apiError.js';
 
+const LEGACY_PRODUCT_SKUS: Record<string, string> = {
+  'p-brown-6': 'GE-BROWN-06',
+  'p-brown-10': 'GE-BROWN-10',
+  'p-brown-12': 'GE-BROWN-12',
+  'p-white-6': 'GE-WHITE-06',
+  'p-white-10': 'GE-WHITE-10',
+  'p-white-12': 'GE-WHITE-12',
+};
+
 export class CartController {
   /**
    * Recalculates subtotal, delivery, coupon discount and final total server-side
@@ -67,13 +76,39 @@ export class CartController {
     let cart: ICart | null = null;
     if (req.userId) {
       cart = await Cart.findOne({ user: req.userId });
-      // If user had a guest cart before logging in, merge it
-      if (!cart && guestId) {
-        cart = await Cart.findOne({ guestId });
-        if (cart) {
-          cart.user = req.userId as any;
-          cart.guestId = undefined;
-          await cart.save();
+
+      if (guestId) {
+        const guestCart = await Cart.findOne({ guestId });
+        if (guestCart && guestCart.id !== cart?.id) {
+          if (!cart) {
+            cart = guestCart;
+            cart.user = req.userId as any;
+            cart.guestId = undefined;
+          } else {
+            for (const guestItem of guestCart.items) {
+              const matchingItem = cart.items.find(
+                (item) =>
+                  item.product.toString() === guestItem.product.toString() &&
+                  JSON.stringify(item.customCartonConfig) ===
+                    JSON.stringify(guestItem.customCartonConfig)
+              );
+
+              if (matchingItem) {
+                matchingItem.quantity += guestItem.quantity;
+              } else {
+                cart.items.push({
+                  product: guestItem.product,
+                  quantity: guestItem.quantity,
+                  customCartonConfig: guestItem.customCartonConfig,
+                  price: guestItem.price,
+                });
+              }
+            }
+
+            if (!cart.appliedCoupon) cart.appliedCoupon = guestCart.appliedCoupon;
+            await cart.save();
+            await guestCart.deleteOne();
+          }
         }
       }
     } else if (guestId) {
@@ -146,6 +181,77 @@ export class CartController {
 
       const updated = await CartController.recalculateCart(cart);
       return ApiResponse.success(res, updated, 'Item added to cart');
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async mergeItems(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const { items } = req.body;
+      if (!Array.isArray(items) || items.length === 0) {
+        return next(ApiError.badRequest('Cart items are required'));
+      }
+
+      const cart = await CartController.getOrCreateCart(req);
+      const mergedItems = [];
+      const quantitiesByProduct = new Map<string, { incoming: number; inCart: number; stock: number }>();
+
+      for (const item of items) {
+        if (typeof item.productId !== 'string' || !Number.isInteger(item.quantity) || item.quantity < 1) {
+          return next(ApiError.badRequest('Each cart item requires a valid product and quantity'));
+        }
+
+        const legacySku = LEGACY_PRODUCT_SKUS[item.productId];
+        const product = legacySku
+          ? await Product.findOne({ sku: legacySku, status: 'ACTIVE' })
+          : await Product.findById(item.productId);
+
+        if (!product || product.status !== 'ACTIVE') {
+          return next(ApiError.badRequest(`Cart product ${item.productId} is unavailable`));
+        }
+
+        const matchingItem = cart.items.find(
+          (existing: any) =>
+            existing.product.toString() === product._id.toString() &&
+            JSON.stringify(existing.customCartonConfig) === JSON.stringify(item.customCartonConfig)
+        );
+
+        mergedItems.push({ item, product, matchingItem });
+
+        const productId = product._id.toString();
+        const totals = quantitiesByProduct.get(productId) || {
+          incoming: 0,
+          inCart: cart.items
+            .filter((existing: any) => existing.product.toString() === productId)
+            .reduce((sum: number, existing: any) => sum + existing.quantity, 0),
+          stock: product.stockQuantity,
+        };
+        totals.incoming += item.quantity;
+        quantitiesByProduct.set(productId, totals);
+      }
+
+      for (const { incoming, inCart, stock } of quantitiesByProduct.values()) {
+        if (incoming + inCart > stock) {
+          return next(ApiError.badRequest(`Only ${stock} packs left in stock`));
+        }
+      }
+
+      for (const { item, product, matchingItem } of mergedItems) {
+        if (matchingItem) {
+          matchingItem.quantity += item.quantity;
+        } else {
+          cart.items.push({
+            product: product._id as any,
+            quantity: item.quantity,
+            customCartonConfig: item.customCartonConfig,
+            price: product.discountPrice || product.price,
+          });
+        }
+      }
+
+      const updated = await CartController.recalculateCart(cart);
+      return ApiResponse.success(res, updated, 'Cart items merged');
     } catch (err) {
       next(err);
     }
@@ -234,4 +340,3 @@ export class CartController {
     }
   }
 }
-
